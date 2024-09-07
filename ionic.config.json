@@ -1,0 +1,8 @@
+{
+  "name": "Te Llevo DUOC",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "35c3d401"
+}
