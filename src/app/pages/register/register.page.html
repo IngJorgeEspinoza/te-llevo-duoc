@@ -1,13 +1,55 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-title>Te Llevo DUOC</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+  <!-- Imagen y título-->
+  <div class="ion-text-center">
+    <ion-img src="assets/images/logo.png" alt="Logo de Te Llevo DUOC"></ion-img>
+  </div>
+
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">register</ion-title>
+      <ion-title size="large">Crear Cuenta</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <!-- Formulario de registro -->
+  <ion-item>
+    <ion-label>Ingresa tus datos</ion-label>
+  </ion-item>
+
+    <ion-item>
+      <ion-input type="email" placeholder="Correo Electrónico de DUOC UC"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="email" placeholder="Nombre y Apellidos"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="email" placeholder="Fecha de Nacimiento"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-input type="node -- verpassword" placeholder="Contraseña">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="password" placeholder="Contraseña">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+
+    <!-- Botón de Crear Cuenta -->
+    <ion-button expand="block" type="submit" >Crear Cuenta</ion-button>
+  
+  <!-- Opciones para restablecer contraseña y crear cuenta -->
+  <div class="ion-text-center ion-padding">
+    <ion-button fill="clear">Iniciar sesión</ion-button>
+  </div>
 </ion-content>
