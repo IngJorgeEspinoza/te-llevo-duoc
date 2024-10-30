@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../service/firebase.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-// import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth'; // Asegúrate de tener esto importado
 
 @Component({
   selector: 'app-tab4',
@@ -11,16 +11,29 @@ import { AlertController } from '@ionic/angular';
 })
 export class Tab4Page implements OnInit {
 
-  userEmail: string = ''; // Inicialización de la propiedad
+  userEmail: string = ''; // Mantén solo el email del usuario
 
   constructor(
     private firebaseService: FirebaseService,
     private router: Router,
     private alertController: AlertController,
-    // private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth // Inyectado
   ) { }
 
   ngOnInit() {
+    this.getUserEmail();
+  }
+
+  // Método para obtener el email del usuario
+  getUserEmail() {
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        this.userEmail = user.email ? user.email : '';
+      } else {
+        // Si no hay usuario autenticado, redirigir al login
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   logout() {
