@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HelpPage implements OnInit {
 
+  supportEmail: string = 'soporte@tellevo.duoc.cl';
+  contactEmail: string = 'soporte@tellevo.duoc.cl';
+
   constructor() { }
 
   ngOnInit() {
