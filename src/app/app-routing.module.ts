@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/compat/auth-guard';
+
+const redirectLogin = () => redirectUnauthorizedTo(['/login']);
 
 const routes: Routes = [
   {
@@ -13,7 +16,9 @@ const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectLogin }
   },
   {
     path: 'register',
@@ -21,15 +26,19 @@ const routes: Routes = [
   },
   {
     path: 'recovery',
-    loadChildren: () => import('./pages/recovery/recovery.module').then( m => m.RecoveryPageModule)
+    loadChildren: () => import('./pages/recovery/recovery.module').then( m => m.RecoveryPageModule),
   },
   {
     path: 'tab4',
-    loadChildren: () => import('./tab4/tab4.module').then( m => m.Tab4PageModule)
+    loadChildren: () => import('./tab4/tab4.module').then( m => m.Tab4PageModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectLogin }
   },
   {
     path: 'help',
-    loadChildren: () => import('./pages/help/help.module').then( m => m.HelpPageModule)
+    loadChildren: () => import('./pages/help/help.module').then( m => m.HelpPageModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectLogin }
   }
 
 
