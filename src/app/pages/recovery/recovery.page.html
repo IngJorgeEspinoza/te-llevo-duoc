@@ -1,18 +1,49 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>recovery</ion-title>
+    <ion-title>Recuperar Contraseña</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">recovery</ion-title>
-      <ion-item>
-        <ion-input [(ngModel)] = "email" label = "Email" type ="email placeholder="></ion-input>
-      </ion-item>
-      <ion-button (click)="recovery()" expand="block">recovery</ion-button>
+<ion-content [fullscreen]="true" class="ion-padding">
 
-    </ion-toolbar>
-  </ion-header>
+  <!-- Imagen o Logo -->
+  <div class="ion-text-center">
+    <ion-img
+      src="assets/images/logo.png"
+      alt="Logo de Te Llevo DUOC"
+      class="logo">
+    </ion-img>
+    <h2>Recuperar Contraseña</h2>
+  </div>
+
+  <!-- Formulario de Recuperación -->
+  <form [formGroup]="recoveryForm" (ngSubmit)="recoverPassword()">
+    <ion-list>
+
+      <!-- Correo Electrónico -->
+      <ion-item>
+        <ion-label position="stacked">Correo Institucional</ion-label>
+        <ion-input formControlName="email" type="email" placeholder="Ingresa tu correo institucional"></ion-input>
+      </ion-item>
+      <div *ngIf="recoveryForm.get('email')?.errors && recoveryForm.get('email')?.touched" class="error-message">
+        <ion-text color="danger">
+          <p *ngIf="recoveryForm.get('email')?.errors?.['required']">El correo es requerido.</p>
+          <p *ngIf="recoveryForm.get('email')?.errors?.['email']">Ingresa un correo válido.</p>
+          <p *ngIf="recoveryForm.get('email')?.errors?.['notInstitutionalEmail']">Debes usar tu correo institucional (&#64;duocuc.cl).</p>
+        </ion-text>
+      </div>
+
+    </ion-list>
+
+    <!-- Botón de Recuperar Contraseña -->
+    <div class="button-container">
+      <ion-button type="submit" [disabled]="!recoveryForm.valid">Enviar Correo de Recuperación</ion-button>
+    </div>
+  </form>
+
+  <!-- Enlace para volver al inicio de sesión -->
+  <div class="ion-text-center ion-padding">
+    <p>¿Recordaste tu contraseña? <a [routerLink]="['/login']">Inicia sesión</a></p>
+  </div>
+
 </ion-content>
