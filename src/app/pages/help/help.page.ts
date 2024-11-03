@@ -67,7 +67,7 @@ export class HelpPage implements OnInit {
     }
   ];
 
-  contactEmail: string = 'jor.espinozaa@duocuc.cl';
+  contactEmail: string = 'ma.henriquezq@duocuc.cl';
 
   constructor(private platform: Platform, private alertController: AlertController) { }
 
