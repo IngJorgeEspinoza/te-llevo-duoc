@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/compat/auth-guard';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
+
 const redirectLogin = () => redirectUnauthorizedTo(['/login']);
 
 const routes: Routes = [
