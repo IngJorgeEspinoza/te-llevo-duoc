@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/service/firebase.service';
 import { StorageService } from 'src/app/service/storage.service';
@@ -13,6 +13,7 @@ export class LoginPage implements OnInit {
 
   email: string = "";
   password: string = "";
+  tokenID: string = ""; // Para almacenar el token ID
 
   constructor(
     private firebase: FirebaseService,
@@ -21,20 +22,27 @@ export class LoginPage implements OnInit {
     private storage: StorageService
   ) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   async login() {
     try {
+      // Autenticación del usuario
       let user = await this.firebase.Auth(this.email, this.password);
-      console.log(user);
-      // Guarda el correo
+      
+      // Obtener el token ID del usuario autenticado
+      this.tokenID = await user.user?.getIdToken() || "";
+      console.log("TokenID:", this.tokenID);
+
+      // Guardar el token ID y el correo en el almacenamiento
+      this.storage.set('tokenID', this.tokenID);
       this.storage.set('email', this.email);
-      // Esto para guardar el nombre
-      // this.storage.set('name', 'Nombre del Usuario');
-      // esto es para guardar la foto
-      // this.storage.set('photo', 'ruta/a/la/foto.jpg');
-      this.router.navigate(['/tabs/tab1']);
+
+      // Navegar a la página principal con los datos necesarios
+      const navigationExtras: NavigationExtras = {
+        queryParams: { email: this.email }
+      };
+      this.router.navigate(['/tabs/tab1'], navigationExtras);
+
     } catch (error) {
       console.log(error);
       this.popAlert();
