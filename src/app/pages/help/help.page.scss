@@ -1,46 +1,63 @@
+/* help.page.scss */
+
+/* Definición del Contenedor */
+.content-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 ion-header {
-  --background: #3880ff; /* Azul por defecto de Ionic */
-  --color: white;
+  --background: var(--ion-color-primary);
+  --color: var(--ion-text-color);
 }
 
 ion-title {
   font-weight: bold;
 }
 
-ion-list {
-  max-width: 800px;
-  margin: 0 auto;
+.faq-item {
+  border-bottom: 1px solid var(--ion-border-color);
 }
 
-ion-item h2 {
-  font-size: 20px;
-  margin-bottom: 5px;
+.faq-item:last-child {
+  border-bottom: none;
 }
 
-ion-item p {
-  font-size: 14px;
-  color: #666;
-}
-
-ion-accordion {
-  margin-bottom: 10px;
-}
-
-ion-accordion-header {
-  --background: #f4f5f8;
-}
-
-ion-accordion-content {
+.faq-answer {
   padding: 10px 15px;
-  background: #ffffff;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.contact-section {
-  margin-top: 30px;
+.additional-help {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.additional-help p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: var(--ion-text-color);
+}
+
+ion-button {
+  --border-radius: 20px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --background: var(--ion-color-success);
+  --color: #fff;
+}
+
+ion-button:hover {
+  --background: darken(var(--ion-color-success), 10%);
 }
 
 ion-card {
-  background: #f4f5f8;
+  margin-top: 20px;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
 }
 
 ion-card-title {
@@ -51,28 +68,48 @@ ion-card-title {
 ion-card-content p {
   font-size: 16px;
   margin-bottom: 10px;
+  color: var(--ion-text-color);
 }
 
-.contact-section ion-card-content a {
-  color: #3880ff; /* Azul para enlaces */
-  text-decoration: none;
+ion-footer {
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
 }
 
-.contact-section ion-card-content a:hover {
-  text-decoration: underline;
-}
-
-ion-fab-button {
-  background-color: #25D366; /* Color verde de WhatsApp */
-  color: white;
-}
-
-ion-fab-button:hover {
-  background-color: #128C7E;
+ion-footer ion-card {
+  margin: 0;
+  background: var(--ion-background-color);
 }
 
 @media (max-width: 600px) {
-  ion-list {
+  .content-wrapper {
     max-width: 100%;
+    padding: 0 10px;
   }
+
+  ion-card-content p {
+    font-size: 14px;
+  }
+
+  .additional-help p {
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estilos Específicos para Modo Oscuro */
+.dark {
+  --ion-background-color: #121212;
+  --ion-text-color: #ffffff;
+  --ion-border-color: #2c2c2c;
+
+  /* Puedes sobrescribir o añadir más variables si es necesario */
 }
