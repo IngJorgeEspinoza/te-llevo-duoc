@@ -28,17 +28,13 @@ export class AppComponent implements OnInit {
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      // Inicialización de la aplicación
-    });
+    this.platform.ready().then(() => {});
   }
 
   ngOnInit() {
-    // Cargar los datos del usuario al iniciar la app
     this.loadUserData();
   }
 
-  // Método para cargar los datos del usuario cada vez que se abre el menú
   loadUserData() {
     const storedEmail = this.storage.get('email');
     if (storedEmail) {
@@ -61,17 +57,8 @@ export class AppComponent implements OnInit {
       header: 'Confirmar Cierre de Sesión',
       message: '¿Estás seguro de que deseas cerrar sesión?',
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'Cerrar Sesión',
-          handler: () => {
-            this.logout();
-          }
-        }
+        { text: 'Cancelar', role: 'cancel', cssClass: 'secondary' },
+        { text: 'Cerrar Sesión', handler: () => this.logout() }
       ]
     });
 
@@ -81,7 +68,6 @@ export class AppComponent implements OnInit {
   async logout() {
     await this.menuController.close();
 
-    // Animación de cierre de sesión
     const loading = await this.loadingController.create({
       message: 'Cerrando sesión...',
       duration: 1000,
@@ -91,8 +77,7 @@ export class AppComponent implements OnInit {
 
     try {
       await this.firebase.logout();
-      // Limpiar los datos del usuario del storage
-      this.storage.clear();
+      this.storage.clearSessionData(); // Only clear temporary session data
       await loading.onDidDismiss();
       this.router.navigate(['/login']);
     } catch (error) {
@@ -116,18 +101,10 @@ export class AppComponent implements OnInit {
     const alert = await this.alertController.create({
       header: 'Editar Perfil',
       inputs: [
-        {
-          name: 'name',
-          type: 'text',
-          placeholder: 'Ingresa tu nombre',
-          value: this.userName
-        }
+        { name: 'name', type: 'text', placeholder: 'Ingresa tu nombre', value: this.userName }
       ],
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
+        { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Guardar',
           handler: (data) => {
