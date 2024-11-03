@@ -30,12 +30,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/recovery/recovery.module').then( m => m.RecoveryPageModule),
   },
   {
-    path: 'tab4',
-    loadChildren: () => import('./tab4/tab4.module').then( m => m.Tab4PageModule),
-    canActivate: [AngularFireAuthGuard],
-    data: { authGuardPipe: redirectLogin }
-  },
-  {
     path: 'help',
     loadChildren: () => import('./pages/help/help.module').then( m => m.HelpPageModule),
     canActivate: [AngularFireAuthGuard],
