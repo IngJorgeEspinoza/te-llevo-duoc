@@ -8,178 +8,52 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <div class="content-wrapper">
+    
+    <!-- Sección de Preguntas Frecuentes -->
+    <ion-list>
+      <ion-item>
+        <ion-label>
+          <h2>Preguntas Frecuentes</h2>
+          <p>Encuentra respuestas a las preguntas más comunes.</p>
+        </ion-label>
+      </ion-item>
   
-  <!-- Sección de Preguntas Frecuentes -->
-  <ion-list>
-    <ion-item lines="none">
-      <ion-label>
-        <h2>Preguntas Frecuentes</h2>
-        <p>Encuentra respuestas a las preguntas más comunes.</p>
-      </ion-label>
-    </ion-item>
-    
-    <ion-accordion-group>
-      <!-- FAQ 1 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Cómo puedo crear una cuenta en Te Llevo DUOC?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+      <div *ngFor="let faq of faqs" class="faq-item">
+        <ion-item button (click)="toggleAnswer(faq)">
+          <ion-label>
+            {{ faq.question }}
+          </ion-label>
+          <ion-icon [name]="faq.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'" slot="end"></ion-icon>
         </ion-item>
-        <ion-content slot="content">
-          <p>
-            Para crear una cuenta, dirígete a la sección de registro en la aplicación. Completa el formulario con tu correo institucional, una contraseña segura y la información personal requerida. Una vez registrado, recibirás un correo de confirmación para activar tu cuenta.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 2 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Qué hago si olvidé mi contraseña?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Si olvidaste tu contraseña, ve a la sección de recuperación en la pantalla de inicio de sesión. Ingresa tu correo electrónico institucional y recibirás un enlace para restablecer tu contraseña. Sigue las instrucciones en el correo para completar el proceso.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 3 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Cómo puedo editar mi perfil?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Para editar tu perfil, accede a la sección de "Cuenta" en la aplicación. Allí encontrarás la opción "Editar Perfil", donde podrás actualizar tu información personal, cambiar tu foto de perfil y ajustar tus preferencias de notificación.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 4 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Cómo reservar un viaje?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Para reservar un viaje, ve a la sección "Reservar Viaje" en la aplicación. Selecciona tu punto de partida y destino, elige la fecha y hora deseada, y confirma la reserva. Recibirás una notificación una vez que un conductor acepte tu solicitud.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 5 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Puedo cancelar una reserva?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Sí, puedes cancelar una reserva desde la sección "Mis Reservas" en la aplicación. Ten en cuenta que las cancelaciones realizadas con menos de 15 minutos de la hora programada podrían estar sujetas a una pequeña tarifa de cancelación.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 6 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Cuáles son los métodos de pago aceptados?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Te Llevo DUOC acepta varios métodos de pago, incluyendo tarjetas de crédito y débito, transferencias bancarias, y pagos en efectivo. Puedes seleccionar tu método de pago preferido durante el proceso de reserva.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 7 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Cómo contacto al soporte técnico?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Puedes contactar al soporte enviando un correo a 
-            <a [href]="'mailto:' + supportEmail">{{ supportEmail }}</a> 
-            o llamando al número de atención 800-123-456. Nuestro equipo está disponible de lunes a viernes, de 9:00 AM a 6:00 PM.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 8 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Dónde puedo ver mi historial de viajes?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Tu historial de viajes está disponible en la sección "Mis Viajes" de la aplicación. Aquí podrás ver todas tus reservas anteriores, incluyendo detalles como fecha, hora, ruta y conductor asignado.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 9 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Qué hago si encuentro un problema durante el viaje?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Si enfrentas algún problema durante un viaje, como retrasos o inconvenientes con el conductor, puedes reportarlo desde la sección "Reportar Problema" en la aplicación. Proporciona detalles específicos para que podamos investigar y resolver la situación lo antes posible.
-          </p>
-        </ion-content>
-      </ion-accordion>
-
-      <!-- FAQ 10 -->
-      <ion-accordion>
-        <ion-item slot="header">
-          <ion-label>¿Cómo actualizo la información de mi vehículo?</ion-label>
-          <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-        </ion-item>
-        <ion-content slot="content">
-          <p>
-            Si eres conductor en Te Llevo DUOC, puedes actualizar la información de tu vehículo desde la sección "Perfil de Conductor". Aquí podrás editar detalles como modelo, color, número de placa y subir una foto actualizada de tu vehículo.
-          </p>
-        </ion-content>
-      </ion-accordion>
-    </ion-accordion-group>
-  </ion-list>
-
-  <!-- Sección de Contacto -->
-  <div class="contact-section">
-    <ion-item lines="none">
-      <ion-label>
-        <h2>Contacto</h2>
-        <p>¿Tienes más preguntas? Contáctanos.</p>
-      </ion-label>
-    </ion-item>
-    
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Información de Contacto</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p><strong>Email:</strong> <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a></p>
-        <p><strong>Teléfono:</strong> +56 9 9137 9473</p>
-        <p><strong>Horario de Atención:</strong> Lunes a Viernes, 9:00 AM - 6:00 PM</p>
-        <p><strong>Dirección:</strong> Av. San Joaquín 1234, Santiago, Chile</p>
-      </ion-card-content>
-    </ion-card>
+        <div *ngIf="faq.isOpen" class="faq-answer">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </ion-list>
+  
+    <!-- Sección de Ayuda Adicional -->
+    <div class="additional-help">
+      <p>¿Necesitas más ayuda?</p>
+      <p>Contáctanos por WhatsApp</p>
+      <ion-button color="success" expand="block" (click)="openWhatsApp()">
+        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        Contactar por WhatsApp
+      </ion-button>
+    </div>
+  
   </div>
-
-  <!-- Botón Flotante de WhatsApp -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="success" (click)="openWhatsApp()">
-      <ion-icon name="logo-whatsapp"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-  
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-title>Información de Contacto</ion-title>
+  </ion-toolbar>
+  <ion-card>
+    <ion-card-content>
+      <p><strong>Dirección:</strong> DUOC UC San Joaquín</p>
+      <p><strong>Teléfono:</strong> +56 9 9137 9473</p>
+      <p><strong>Email:</strong> <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a></p>
+    </ion-card-content>
+  </ion-card>
+</ion-footer>
