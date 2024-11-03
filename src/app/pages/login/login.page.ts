@@ -30,14 +30,11 @@ export class LoginPage implements OnInit {
       this.tokenID = await user.user?.getIdToken() || "";
       console.log("TokenID:", this.tokenID);
 
-      // acá se almacena el tokenID y email
+      // Almacena el tokenID y el email en el storage
       this.storage.set('tokenID', this.tokenID);
       this.storage.set('email', this.email);
-      const storedName = this.storage.getUserName(this.tokenID);
-      if (storedName) {
-        this.storage.setUserName(this.tokenID, storedName);
-      }
 
+      // Redirige sin `NavigationExtras` para evitar queryParams
       this.router.navigate(['/tabs/tab1']);
     } catch (error) {
       console.log(error);
