@@ -1,8 +1,7 @@
-// app.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationStart, ActivatedRoute } from '@angular/router';
 import { FirebaseService } from './service/firebase.service';
-import { AlertController, LoadingController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, Platform, MenuController } from '@ionic/angular';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -12,8 +11,8 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   userEmail: string = '';
-  userName: string = 'Usuario'; // Nombre por defecto
-  userPhoto: string = 'assets/images/default-user.png'; // Foto por defecto
+  userName: string = 'Usuario';
+  userPhoto: string = 'assets/images/default-user.png';
 
   constructor(
     private router: Router,
@@ -21,19 +20,18 @@ export class AppComponent implements OnInit {
     private firebase: FirebaseService,
     private alertController: AlertController,
     private loadingController: LoadingController,
-    private platform: Platform
+    private platform: Platform,
+    private menuController: MenuController
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Puedes inicializar servicios aquí si es necesario
-    });
+      });
   }
 
   ngOnInit() {
-    // Capturar parámetros desde la navegación
     this.router.events
       .pipe(filter(event => event instanceof NavigationStart))
       .subscribe(() => {
@@ -57,8 +55,7 @@ export class AppComponent implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            // Acción al cancelar
-          }
+            }
         },
         {
           text: 'Cerrar Sesión',
@@ -68,22 +65,21 @@ export class AppComponent implements OnInit {
         }
       ]
     });
-
     await alert.present();
   }
 
   async logout() {
-    // Mostrar un loader con animación de cierre de sesión
-    const loading = await this.loadingController.create({
+    await this.menuController.close();
+      const loading = await this.loadingController.create({
       message: 'Cerrando sesión...',
-      duration: 2000, // Duración de la animación en milisegundos
-      spinner: 'crescent' // Tipo de spinner
+      duration: 2000,
+      spinner: 'crescent' 
     });
     await loading.present();
 
     try {
       await this.firebase.logout();
-      await loading.onDidDismiss(); // Esperar a que el loader desaparezca
+      await loading.onDidDismiss(); 
       this.router.navigate(['/login']);
     } catch (error) {
       await loading.dismiss();
@@ -118,8 +114,7 @@ export class AppComponent implements OnInit {
           text: 'Cancelar',
           role: 'cancel',
           handler: () => {
-            // Acción al cancelar
-          }
+            }
         },
         {
           text: 'Guardar',
@@ -127,16 +122,15 @@ export class AppComponent implements OnInit {
             if (data.name && data.name.trim() !== '') {
               this.userName = data.name.trim();
               this.presentAlert('Éxito', 'Tu nombre ha sido actualizado.');
-              return true; // Permite que la alerta se cierre
+              return true; 
             } else {
               this.presentAlert('Error', 'El nombre no puede estar vacío.');
-              return false; // Evita que la alerta se cierre
+              return false; 
             }
           }
         }
       ]
     });
-
     await alert.present();
   }
 }

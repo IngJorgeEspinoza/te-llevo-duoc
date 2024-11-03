@@ -36,9 +36,23 @@ const routes: Routes = [
     data: { authGuardPipe: redirectLogin }
   },
   {
+    path: 'history',
+    loadChildren: () => import('./pages/history/history.module').then( m => m.HistoryPageModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectLogin }
+  },
+  {
+    path: 'payments',
+    loadChildren: () => import('./pages/payments/payments.module').then( m => m.PaymentsPageModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectLogin }
+  },
+  {
     path: '**',
     component: PageNotFoundComponent,
   },
+
+
 ];
 
 @NgModule({
