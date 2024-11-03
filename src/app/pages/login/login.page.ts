@@ -13,7 +13,7 @@ export class LoginPage implements OnInit {
 
   email: string = "";
   password: string = "";
-  tokenID: string = ""; // Para almacenar el token ID
+  tokenID: string = ""; 
 
   constructor(
     private firebase: FirebaseService,
@@ -26,23 +26,15 @@ export class LoginPage implements OnInit {
 
   async login() {
     try {
-      // Autenticación del usuario
       let user = await this.firebase.Auth(this.email, this.password);
-      
-      // Obtener el token ID del usuario autenticado
       this.tokenID = await user.user?.getIdToken() || "";
       console.log("TokenID:", this.tokenID);
-
-      // Guardar el token ID y el correo en el almacenamiento
       this.storage.set('tokenID', this.tokenID);
       this.storage.set('email', this.email);
-
-      // Navegar a la página principal con los datos necesarios
       const navigationExtras: NavigationExtras = {
         queryParams: { email: this.email }
       };
       this.router.navigate(['/tabs/tab1'], navigationExtras);
-
     } catch (error) {
       console.log(error);
       this.popAlert();
