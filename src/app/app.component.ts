@@ -1,10 +1,8 @@
-// src/app/app.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationStart, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseService } from './service/firebase.service';
 import { AlertController, LoadingController, Platform, MenuController } from '@ionic/angular';
-import { filter } from 'rxjs/operators';
-import { SessionService } from './service/session.service';
+import { StorageService } from './service/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +22,7 @@ export class AppComponent implements OnInit {
     private loadingController: LoadingController,
     private platform: Platform,
     private menuController: MenuController,
-    private session: SessionService
+    private storage: StorageService
   ) {
     this.initializeApp();
   }
@@ -35,29 +33,28 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Obtengo el correo electrónico desde el Login usando el servicio session
-    const storedEmail = this.session.get('email');
+    const storedEmail = this.storage.get('email');
     if (storedEmail) {
       this.userEmail = storedEmail;
     }
 
-    // esto es para capturar el nombre
-    // const storedName = this.session.get('name');
-    // if (storedName) {
-    //   this.userName = storedName;
-    // }
+    // Obtener el nombre desde localStorage??
+    //const storedName = this.storage.get('name');
+    //if (storedName) {
+    //  this.userName = storedName;
+    //}
 
-    // esto es para capturar la foto
-    // const storedPhoto = this.session.get('photo');
-    // if (storedPhoto) {
-    //   this.userPhoto = storedPhoto;
-    // }
+    // Obtener la foto desde localStorage??
+    //const storedPhoto = this.storage.get('photo');
+    //if (storedPhoto) {
+    //  this.userPhoto = storedPhoto;
+    //}
   }
 
   async confirmLogout() {
     const alert = await this.alertController.create({
       header: 'Confirmar Cierre de Sesión',
-      message: '¿Estás seguro de que deseas cerrar sesión',
+      message: '¿Estás seguro de que deseas cerrar sesión?',
       buttons: [
         {
           text: 'Cancelar',
@@ -81,7 +78,7 @@ export class AppComponent implements OnInit {
   async logout() {
     await this.menuController.close();
 
-    // Loader con animación de cierre 
+    // Loader 
     const loading = await this.loadingController.create({
       message: 'Cerrando sesión...',
       duration: 1000, 
@@ -91,8 +88,7 @@ export class AppComponent implements OnInit {
 
     try {
       await this.firebase.logout();
-      // Limpiar los datos del usuario 
-      this.session.clear();
+      this.storage.clear();
       await loading.onDidDismiss();
       this.router.navigate(['/login']);
     } catch (error) {
@@ -135,11 +131,12 @@ export class AppComponent implements OnInit {
           handler: (data) => {
             if (data.name && data.name.trim() !== '') {
               this.userName = data.name.trim();
-              this.session.set('name', this.userName);
+              // Actualizar el nombre en localStorage
+              this.storage.set('name', this.userName);
               this.presentAlert('Éxito', 'Tu nombre ha sido actualizado.');
               return true;
             } else {
-              this.presentAlert('Error', 'Name cannot be empty.');
+              this.presentAlert('Error', 'El nombre no puede estar vacío.');
               return false;
             }
           }

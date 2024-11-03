@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/service/firebase.service';
-import { SessionService } from 'src/app/service/session.service';
+import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +18,7 @@ export class LoginPage implements OnInit {
     private firebase: FirebaseService,
     private router: Router,
     private alertController: AlertController,
-    private session: SessionService
+    private storage: StorageService
   ) { }
 
   ngOnInit() {
@@ -28,7 +28,12 @@ export class LoginPage implements OnInit {
     try {
       let user = await this.firebase.Auth(this.email, this.password);
       console.log(user);
-      this.session.set('email', this.email);
+      // Guarda el correo
+      this.storage.set('email', this.email);
+      // Esto para guardar el nombre
+      // this.storage.set('name', 'Nombre del Usuario');
+      // esto es para guardar la foto
+      // this.storage.set('photo', 'ruta/a/la/foto.jpg');
       this.router.navigate(['/tabs/tab1']);
     } catch (error) {
       console.log(error);
