@@ -1,6 +1,6 @@
 <ion-app>
   <!-- Menú -->
-  <ion-menu contentId="main-content" type="overlay">
+  <ion-menu contentId="main-content" type="overlay" (ionDidOpen)="loadUserData()">
     <ion-header>
       <ion-toolbar>
         <ion-title>Te llevo?</ion-title>

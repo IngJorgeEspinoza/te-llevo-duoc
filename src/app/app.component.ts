@@ -1,5 +1,6 @@
+// src/app/app.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FirebaseService } from './service/firebase.service';
 import { AlertController, LoadingController, Platform, MenuController } from '@ionic/angular';
 import { StorageService } from './service/storage.service';
@@ -16,7 +17,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     private firebase: FirebaseService,
     private alertController: AlertController,
     private loadingController: LoadingController,
@@ -29,26 +29,31 @@ export class AppComponent implements OnInit {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      // Inicialización de la aplicación
     });
   }
 
   ngOnInit() {
+    // Cargar los datos del usuario al iniciar la app
+    this.loadUserData();
+  }
+
+  // Método para cargar los datos del usuario cada vez que se abre el menú
+  loadUserData() {
     const storedEmail = this.storage.get('email');
     if (storedEmail) {
       this.userEmail = storedEmail;
     }
 
-    // Obtener el nombre desde localStorage??
-    //const storedName = this.storage.get('name');
-    //if (storedName) {
-    //  this.userName = storedName;
-    //}
+    const storedName = this.storage.get('name');
+    if (storedName) {
+      this.userName = storedName;
+    }
 
-    // Obtener la foto desde localStorage??
-    //const storedPhoto = this.storage.get('photo');
-    //if (storedPhoto) {
-    //  this.userPhoto = storedPhoto;
-    //}
+    const storedPhoto = this.storage.get('photo');
+    if (storedPhoto) {
+      this.userPhoto = storedPhoto;
+    }
   }
 
   async confirmLogout() {
@@ -60,8 +65,6 @@ export class AppComponent implements OnInit {
           text: 'Cancelar',
           role: 'cancel',
           cssClass: 'secondary',
-          handler: () => {
-          }
         },
         {
           text: 'Cerrar Sesión',
@@ -78,16 +81,17 @@ export class AppComponent implements OnInit {
   async logout() {
     await this.menuController.close();
 
-    // Loader 
+    // Animación de cierre de sesión
     const loading = await this.loadingController.create({
       message: 'Cerrando sesión...',
-      duration: 1000, 
+      duration: 1000,
       spinner: 'crescent'
     });
     await loading.present();
 
     try {
       await this.firebase.logout();
+      // Limpiar los datos del usuario del storage
       this.storage.clear();
       await loading.onDidDismiss();
       this.router.navigate(['/login']);
@@ -110,7 +114,7 @@ export class AppComponent implements OnInit {
 
   async editProfile() {
     const alert = await this.alertController.create({
-      header: 'Editar Perfíl',
+      header: 'Editar Perfil',
       inputs: [
         {
           name: 'name',
@@ -123,15 +127,12 @@ export class AppComponent implements OnInit {
         {
           text: 'Cancelar',
           role: 'cancel',
-          handler: () => {
-          }
         },
         {
           text: 'Guardar',
           handler: (data) => {
             if (data.name && data.name.trim() !== '') {
               this.userName = data.name.trim();
-              // Actualizar el nombre en localStorage
               this.storage.set('name', this.userName);
               this.presentAlert('Éxito', 'Tu nombre ha sido actualizado.');
               return true;
