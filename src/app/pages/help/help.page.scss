@@ -1,61 +1,78 @@
 ion-header {
-    --background: #3880ff; /* Azul por defecto de Ionic */
-    --color: white;
-  }
-  
-  ion-title {
-    font-weight: bold;
-  }
-  
+  --background: #3880ff; /* Azul por defecto de Ionic */
+  --color: white;
+}
+
+ion-title {
+  font-weight: bold;
+}
+
+ion-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+ion-item h2 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+ion-item p {
+  font-size: 14px;
+  color: #666;
+}
+
+ion-accordion {
+  margin-bottom: 10px;
+}
+
+ion-accordion-header {
+  --background: #f4f5f8;
+}
+
+ion-accordion-content {
+  padding: 10px 15px;
+  background: #ffffff;
+}
+
+.contact-section {
+  margin-top: 30px;
+}
+
+ion-card {
+  background: #f4f5f8;
+}
+
+ion-card-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+ion-card-content p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.contact-section ion-card-content a {
+  color: #3880ff; /* Azul para enlaces */
+  text-decoration: none;
+}
+
+.contact-section ion-card-content a:hover {
+  text-decoration: underline;
+}
+
+ion-fab-button {
+  background-color: #25D366; /* Color verde de WhatsApp */
+  color: white;
+}
+
+ion-fab-button:hover {
+  background-color: #128C7E;
+}
+
+@media (max-width: 600px) {
   ion-list {
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 100%;
   }
-  
-  ion-item h2 {
-    font-size: 20px;
-    margin-bottom: 5px;
-  }
-  
-  ion-item p {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  ion-accordion {
-    margin-bottom: 10px;
-  }
-  
-  ion-accordion-header {
-    --background: #f4f5f8;
-  }
-  
-  ion-accordion-content {
-    padding: 10px 15px;
-    background: #ffffff;
-  }
-  
-  .contact-section {
-    margin-top: 30px;
-  }
-  
-  ion-card {
-    background: #f4f5f8;
-  }
-  
-  ion-card-title {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  ion-card-content p {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  
-  @media (max-width: 600px) {
-    ion-list {
-      max-width: 100%;
-    }
-  }
-  
+}
