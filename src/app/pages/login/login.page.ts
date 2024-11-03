@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationExtras,Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/service/firebase.service';
-
+import { SessionService } from 'src/app/service/session.service';
 
 @Component({
   selector: 'app-login',
@@ -11,34 +11,37 @@ import { FirebaseService } from 'src/app/service/firebase.service';
 })
 export class LoginPage implements OnInit {
 
-  email=""
-  password=""
+  email: string = "";
+  password: string = "";
 
-  constructor(private firebase:FirebaseService, private router:Router, private alertcontroler:AlertController) { }
+  constructor(
+    private firebase: FirebaseService,
+    private router: Router,
+    private alertController: AlertController,
+    private session: SessionService
+  ) { }
 
   ngOnInit() {
   }
 
-  async login(){
+  async login() {
     try {
-      let user=await this.firebase.Auth(this.email,this.password);
+      let user = await this.firebase.Auth(this.email, this.password);
       console.log(user);
-      const navigationExtras:NavigationExtras = {
-        queryParams: {email: this.email}
-      };
-      this.router.navigate(['/tabs/tab1'], navigationExtras)
+      this.session.set('email', this.email);
+      this.router.navigate(['/tabs/tab1']);
     } catch (error) {
       console.log(error);
       this.popAlert();
     }
   }
 
-  async popAlert(){
-    const alert=await this.alertcontroler.create({
-      header:'Error',
-      message:'E-mail o Contraseña incorrectas',
-      buttons:['Intentar nuevamente']
-    })
+  async popAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'E-mail o Contraseña incorrectas',
+      buttons: ['Intentar nuevamente']
+    });
     await alert.present();
   }
 }
