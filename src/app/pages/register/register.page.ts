@@ -61,10 +61,7 @@ export class RegisterPage implements OnInit {
   }
 
   initializeDateOptions() {
-    // Poblar días
     this.days = Array.from({ length: 31 }, (_, i) => i + 1);
-
-    // Poblar años (desde el año actual hasta 1900)
     const currentYear = new Date().getFullYear();
     this.years = [];
     for (let year = currentYear; year >= 1900; year--) {
@@ -72,14 +69,14 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  // Validación personalizada para confirmar que las contraseñas coinciden
+  // confirmar que las contraseñas coinciden
   passwordMatchValidator(formGroup: AbstractControl): ValidationErrors | null {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  // Validación personalizada para correo institucional
+  // Validación correo DUOC
   emailInstitutionalValidator(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
     if (email && email.indexOf('@') !== -1) {
@@ -93,14 +90,13 @@ export class RegisterPage implements OnInit {
     return null;
   }
 
-  // Validación personalizada para fecha de nacimiento
+  // Validación fecha de nacimiento
   dateValidator(formGroup: AbstractControl): ValidationErrors | null {
     const dia = formGroup.get('dia')?.value;
     const mes = formGroup.get('mes')?.value;
     const anio = formGroup.get('anio')?.value;
 
     if (dia && mes && anio) {
-      // Verificar si la fecha es válida
       const date = new Date(anio, mes - 1, dia);
       if (date && date.getDate() === dia && date.getMonth() === mes - 1 && date.getFullYear() === anio) {
         return null;
@@ -122,7 +118,6 @@ export class RegisterPage implements OnInit {
       try {
         // Lógica para registrar el usuario
         await this.firebase.register(email, password);
-        // Puedes guardar el nombre y fecha de nacimiento en la base de datos si lo deseas
         await loading.dismiss();
         this.presentAlert('Cuenta creada', 'Tu cuenta ha sido creada exitosamente.');
         this.router.navigateByUrl('/login');

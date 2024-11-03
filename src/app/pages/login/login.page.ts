@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/service/firebase.service';
 import { StorageService } from 'src/app/service/storage.service';
@@ -29,12 +29,16 @@ export class LoginPage implements OnInit {
       let user = await this.firebase.Auth(this.email, this.password);
       this.tokenID = await user.user?.getIdToken() || "";
       console.log("TokenID:", this.tokenID);
+
+      // acá se almacena el tokenID y email
       this.storage.set('tokenID', this.tokenID);
       this.storage.set('email', this.email);
-      const navigationExtras: NavigationExtras = {
-        queryParams: { email: this.email }
-      };
-      this.router.navigate(['/tabs/tab1'], navigationExtras);
+      const storedName = this.storage.getUserName(this.tokenID);
+      if (storedName) {
+        this.storage.setUserName(this.tokenID, storedName);
+      }
+
+      this.router.navigate(['/tabs/tab1']);
     } catch (error) {
       console.log(error);
       this.popAlert();

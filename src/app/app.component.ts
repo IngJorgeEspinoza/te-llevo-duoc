@@ -1,4 +1,3 @@
-// src/app/app.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirebaseService } from './service/firebase.service';
@@ -39,11 +38,12 @@ export class AppComponent implements OnInit {
     const storedEmail = this.storage.get('email');
     if (storedEmail) {
       this.userEmail = storedEmail;
-    }
 
-    const storedName = this.storage.get('name');
-    if (storedName) {
-      this.userName = storedName;
+      // Cargar el nombre de usuario asociado al email
+      const storedName = this.storage.getUserName(this.userEmail);
+      if (storedName) {
+        this.userName = storedName;
+      }
     }
 
     const storedPhoto = this.storage.get('photo');
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
 
     try {
       await this.firebase.logout();
-      this.storage.clearSessionData(); // Only clear temporary session data
+      this.storage.clearSessionData(); 
       await loading.onDidDismiss();
       this.router.navigate(['/login']);
     } catch (error) {
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
           handler: (data) => {
             if (data.name && data.name.trim() !== '') {
               this.userName = data.name.trim();
-              this.storage.set('name', this.userName);
+              this.storage.setUserName(this.userEmail, this.userName); 
               this.presentAlert('Éxito', 'Tu nombre ha sido actualizado.');
               return true;
             } else {

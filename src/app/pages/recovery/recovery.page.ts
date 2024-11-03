@@ -25,7 +25,7 @@ export class RecoveryPage implements OnInit {
     });
   }
 
-  // Validación personalizada para correo institucional
+  // Validación correo DUOC
   emailInstitutionalValidator(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
     if (email && email.indexOf('@') !== -1) {
@@ -47,7 +47,7 @@ export class RecoveryPage implements OnInit {
       });
       await loading.present();
       try {
-        await this.firebaseService.recovery(email); // Cambiado a 'recovery'
+        await this.firebaseService.recovery(email);
         await loading.dismiss();
         this.presentAlert('Correo Enviado', 'Hemos enviado un enlace de recuperación a tu correo institucional.');
         this.recoveryForm.reset();

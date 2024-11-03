@@ -1,4 +1,3 @@
-// src/app/pages/payments/payments.page.ts
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage.service';
@@ -123,7 +122,6 @@ export class PaymentsPage implements OnInit {
 
   async showValidationErrors(errors: string[]) {
     const formattedErrors = errors.map(error => ` ${error} `).join('');
-
     const alert = await this.alertController.create({
       header: 'Datos incorrectos o incompletos',
       message: formattedErrors,
