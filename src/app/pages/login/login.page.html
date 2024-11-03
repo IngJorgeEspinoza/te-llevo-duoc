@@ -11,7 +11,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <!-- Imagen sobre la palabra login -->
+  <!-- Logo -->
   <div class="ion-text-center">
     <ion-img
       src="assets/images/logo.png"
@@ -20,9 +20,8 @@
     </ion-img>
   </div>
 
-  <!-- Contenedor del formulario -->
+  <!-- Formulario del Login -->
   <div class="login-form">
-    <!-- Formulario de login -->
     <ion-item>
       <ion-label>Ingresa tus datos</ion-label>
     </ion-item>
@@ -37,11 +36,11 @@
       </ion-input>
     </ion-item>
 
-    <!-- Botón de Iniciar Sesión -->
+    <!-- Botón -->
     <ion-button (click)="login()" expand="block" type="submit">Iniciar Sesión</ion-button>
   </div>
 
-  <!-- Opciones para restablecer contraseña y crear cuenta -->
+  <!-- Opciones: contraseña y crear cuenta -->
   <div class="ion-text-center ion-padding">
     <ion-button fill="clear" [routerLink]="['/recovery']">¿Olvidaste tu contraseña?</ion-button>
     <ion-button fill="clear" [routerLink]="['/register']">Crear Cuenta</ion-button>

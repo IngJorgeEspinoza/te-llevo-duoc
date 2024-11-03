@@ -9,12 +9,12 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
   
-  <!-- Tarjeta seleccionada -->
+  <!-- esto es para mostrar la tarjeta seleccionada -->
   <div *ngIf="selectedCard">
     <h3>Tarjeta Seleccionada: {{ selectedCard.name }}</h3>
   </div>
 
-  <!-- Lista de tarjetas -->
+  <!-- lista -->
   <div class="cards-container" *ngIf="cards.length > 0">
     <ion-list>
       <ion-item *ngFor="let card of cards" (click)="selectCard(card)">
@@ -33,7 +33,7 @@
     </ion-list>
   </div>
 
-  <!-- Agregar Tarjeta -->
+  <!-- boton para agregar tarjetas -->
   <div *ngIf="cards.length === 0" class="no-card">
     <p>No tienes tarjetas asociadas.</p>
   </div>

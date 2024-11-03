@@ -6,7 +6,7 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
 
-  <!-- Imagen y título -->
+  <!-- título -->
   <div class="ion-text-center">
     <ion-img
       src="assets/images/logo.png"
@@ -16,12 +16,10 @@
     <h2>Crear Cuenta</h2>
   </div>
 
-  <!-- Contenedor del formulario -->
+  <!-- Formulario -->
   <form [formGroup]="registerForm" (ngSubmit)="register()">
     <ion-list>
-
-      <!-- Correo Electrónico -->
-      <ion-item>
+        <ion-item>
         <ion-label position="stacked">Correo Electrónico de DUOC UC</ion-label>
         <ion-input formControlName="email" type="email" placeholder="Ingresa tu correo"></ion-input>
       </ion-item>
@@ -32,8 +30,6 @@
           <p *ngIf="registerForm.get('email')?.errors?.['notInstitutionalEmail']">Debes usar tu correo institucional (&#64;duocuc.cl).</p>
         </ion-text>
       </div>
-
-      <!-- Nombre y Apellidos -->
       <ion-item>
         <ion-label position="stacked">Nombre y Apellidos</ion-label>
         <ion-input formControlName="nombre" type="text" placeholder="Ingresa tu nombre completo"></ion-input>
@@ -43,8 +39,6 @@
           <p *ngIf="registerForm.get('nombre')?.errors?.['required']">El nombre es requerido.</p>
         </ion-text>
       </div>
-
-      <!-- Fecha de Nacimiento -->
       <div class="date-of-birth-container">
         <!-- Día -->
         <ion-item>
@@ -70,7 +64,7 @@
           </ion-select>
         </ion-item>
       </div>
-      <!-- Mensaje de Error -->
+      <!--Error fecha nac -->
       <div *ngIf="dateOfBirthInvalid" class="error-message">
         <ion-text color="danger">
           <p>La fecha de nacimiento es inválida o incompleta.</p>
@@ -104,14 +98,14 @@
 
     </ion-list>
 
-    <!-- Contenedor del botón -->
+    <!-- botón -->
     <div class="button-container">
       <!-- Botón de Crear Cuenta -->
       <ion-button type="submit" [disabled]="!registerForm.valid">Crear Cuenta</ion-button>
     </div>
   </form>
 
-  <!-- Enlace para iniciar sesión -->
+  <!-- Enlace a iniciar sesión -->
   <div class="ion-text-center ion-padding">
     <p>¿Ya tienes una cuenta? <a [routerLink]="['/login']">Inicia sesión</a></p>
   </div>

@@ -52,12 +52,12 @@ export class HelpPage implements OnInit {
     },
     {
       question: '¿Dónde puedo ver mi historial de viajes?',
-      answer: 'Tu historial de viajes está disponible en la sección "Mis Viajes" de la aplicación. Aquí podrás ver todas tus reservas anteriores, incluyendo detalles como fecha, hora, ruta y conductor asignado.',
+      answer: 'Tu historial de viajes está disponible en la sección "Historial de Viajes" de la aplicación. Aquí podrás ver todas tus reservas anteriores, incluyendo detalles como fecha, hora, ruta y conductor asignado.',
       isOpen: false
     },
     {
       question: '¿Qué hago si encuentro un problema durante el viaje?',
-      answer: 'Si enfrentas algún problema durante un viaje, como retrasos o inconvenientes con el conductor, puedes reportarlo desde la sección "Reportar Problema" en la aplicación. Proporciona detalles específicos para que podamos investigar y resolver la situación lo antes posible.',
+      answer: 'Si enfrentas algún problema durante un viaje, como retrasos o inconvenientes con el conductor, puedes reportarlo desde la sección "Ayuda" en la aplicación. Proporciona detalles específicos para que podamos investigar y resolver la situación lo antes posible.',
       isOpen: false
     },
     {
@@ -82,12 +82,12 @@ export class HelpPage implements OnInit {
     const phoneNumber = '+56991379473';
     const message = 'Hola, necesito ayuda con Te Llevo DUOC.';
 
-    // Verificar si la plataforma es móvil (capacitor) o web
+    // esto es para diferenciar entre plataforma web o móvil
     if (this.platform.is('capacitor')) {
-      // Abrir la aplicación de WhatsApp
+      // WhatsApp en celular
       window.open(`whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_system');
     } else {
-      // Abrir WhatsApp Web
+      // WhatsApp Web
       window.open(`https://wa.me/${phoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`, '_blank');
     }
   }

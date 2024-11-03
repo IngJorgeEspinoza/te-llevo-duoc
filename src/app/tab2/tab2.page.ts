@@ -1,4 +1,3 @@
-// src/app/pages/tab2/tab2.page.ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({

@@ -16,11 +16,9 @@
     <h2>Recuperar Contraseña</h2>
   </div>
 
-  <!-- Formulario de Recuperación -->
+  <!-- Formulario -->
   <form [formGroup]="recoveryForm" (ngSubmit)="recoverPassword()">
     <ion-list>
-
-      <!-- Correo Electrónico -->
       <ion-item>
         <ion-label position="stacked">Correo Institucional</ion-label>
         <ion-input formControlName="email" type="email" placeholder="Ingresa tu correo institucional"></ion-input>
@@ -35,13 +33,13 @@
 
     </ion-list>
 
-    <!-- Botón de Recuperar Contraseña -->
+    <!-- Botoncito -->
     <div class="button-container">
       <ion-button type="submit" [disabled]="!recoveryForm.valid">Enviar Correo de Recuperación</ion-button>
     </div>
   </form>
 
-  <!-- Enlace para volver al inicio de sesión -->
+  <!-- volver al inicio -->
   <div class="ion-text-center ion-padding">
     <p>¿Recordaste tu contraseña? <a [routerLink]="['/login']">Inicia sesión</a></p>
   </div>

@@ -1,4 +1,3 @@
-// src/app/service/storage.service.ts
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -21,31 +20,33 @@ export class StorageService {
     localStorage.removeItem(key);
   }
 
-  // Clear temporary session data but keep user-specific data (e.g., cards)
+  // esta cosa solo elimina los temporales
   clearSessionData(): void {
     this.remove('email');
-    this.remove('name');
-    this.remove('photo');
     this.remove('tokenID');
   }
 
-  // Store cards for a specific user
-  setUserCards(userEmail: string, cards: any[]): void {
-    this.set(`cards_${userEmail}`, cards);
+  // asocia el nombre al token (set y get)
+  setUserName(tokenID: string, name: string): void {
+    this.set(`name_${tokenID}`, name);
+  }
+  getUserName(tokenID: string): string | null {
+    return tokenID ? this.get(`name_${tokenID}`) : null;
   }
 
-  // Retrieve cards for a specific user
-  getUserCards(userEmail: string): any[] {
-    return this.get(`cards_${userEmail}`) || [];
+  // asocia tarjetas al  token (set y get)
+  setUserCards(tokenID: string, cards: any[]): void {
+    if (tokenID) this.set(`cards_${tokenID}`, cards);
+  }
+  getUserCards(tokenID: string): any[] {
+    return tokenID ? this.get(`cards_${tokenID}`) || [] : [];
   }
 
-  // Store selected card for a specific user
-  setUserSelectedCard(userEmail: string, selectedCard: any): void {
-    this.set(`selectedCard_${userEmail}`, selectedCard);
+  // asocia tarjeta seleccionada al token (set y get)
+  setUserSelectedCard(tokenID: string, selectedCard: any): void {
+    if (tokenID) this.set(`selectedCard_${tokenID}`, selectedCard);
   }
-
-  // Retrieve selected card for a specific user
-  getUserSelectedCard(userEmail: string): any | null {
-    return this.get(`selectedCard_${userEmail}`);
+  getUserSelectedCard(tokenID: string): any | null {
+    return tokenID ? this.get(`selectedCard_${tokenID}`) : null;
   }
 }
