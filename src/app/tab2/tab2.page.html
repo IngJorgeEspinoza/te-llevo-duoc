@@ -1,11 +1,15 @@
+<!-- src/app/pages/tab2/tab2.page.html -->
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button> <!-- Botón para abrir el menú global -->
+    </ion-buttons>
     <ion-title>
       Publicar Viaje
     </ion-title>
     <ion-buttons slot="end" [routerLink]="['/help']">
       <ion-button> 
-        <ion-icon slot="icon-only" name="help-circle-outline" ></ion-icon>
+        <ion-icon slot="icon-only" name="help-circle-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

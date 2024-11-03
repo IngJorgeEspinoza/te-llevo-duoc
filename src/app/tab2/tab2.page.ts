@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+// src/app/pages/tab2/tab2.page.ts
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-tab2',
-  templateUrl: 'tab2.page.html',
-  styleUrls: ['tab2.page.scss']
+  templateUrl: './tab2.page.html',
+  styleUrls: ['./tab2.page.scss'],
 })
-export class Tab2Page {
+export class Tab2Page implements OnInit {
 
-  constructor() {}
+  constructor() { }
+
+  ngOnInit() {
+  }
 
 }

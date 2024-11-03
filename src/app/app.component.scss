@@ -1,0 +1,43 @@
+/* app.component.scss */
+
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-profile ion-avatar {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .user-profile h2 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--ion-text-color);
+  }
+  
+  .user-profile p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ion-text-color);
+  }
+  
+  /* Estilos para el Loader de Cierre de Sesión */
+  ion-loading {
+    --background: rgba(0, 0, 0, 0.8);
+    --spinner-color: var(--ion-color-primary);
+    --color: #fff;
+  }
+  
+  /* Estilos Específicos para Modo Oscuro */
+  .dark {
+    --ion-background-color: #121212;
+    --ion-text-color: #ffffff;
+    --ion-border-color: #2c2c2c;
+    
+    /* Puedes sobrescribir o añadir más variables si es necesario */
+  }
+  
