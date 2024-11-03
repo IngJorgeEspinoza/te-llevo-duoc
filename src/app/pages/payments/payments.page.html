@@ -26,8 +26,8 @@
             <span>Exp: {{ card.expiry }}</span>
             <span>CVC: ****</span> 
           </div>
-          <ion-button size="small" color="secondary" (click)="editCard(card, $event)">Editar</ion-button>
-          <ion-button size="small" color="danger" (click)="deleteCard(card, $event)">Eliminar</ion-button>
+          <ion-button size="small" color="secondary" (click)="editCard(card)">Editar</ion-button>
+          <ion-button size="small" color="danger" (click)="deleteCard(card)">Eliminar</ion-button>
         </div>
       </ion-item>
     </ion-list>

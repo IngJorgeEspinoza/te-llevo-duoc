@@ -1,3 +1,4 @@
+// src/app/pages/payments/payments.page.ts
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage.service';
@@ -16,34 +17,29 @@ interface Card {
   styleUrls: ['./payments.page.scss'],
 })
 export class PaymentsPage implements OnInit {
-
   cards: Card[] = [];
   selectedCard: Card | null = null;
+  email: string = '';
 
-  constructor(private alertController: AlertController, private storage: StorageService) { }
+  constructor(private alertController: AlertController, private storage: StorageService) {}
 
   ngOnInit() {
-    // Cargar las tarjetas almacenadas y la tarjeta seleccionada al iniciar la página
-    const storedCards = this.storage.get('cards');
-    const selectedCardName = this.storage.get('selectedCard');
-    if (storedCards) {
-      this.cards = storedCards;
-      // Intentar establecer la tarjeta seleccionada si coincide el nombre con alguna tarjeta guardada
-      if (selectedCardName) {
-        this.selectedCard = this.cards.find(card => card.name === selectedCardName) || null;
-      }
+    this.email = this.storage.get('email');
+    this.loadCardsFromStorage();
+  }
+
+  loadCardsFromStorage() {
+    this.cards = this.storage.getUserCards(this.email);
+    const storedSelectedCard = this.storage.get(`${this.email}_selectedCard`);
+    if (storedSelectedCard) {
+      this.selectedCard = storedSelectedCard;
     }
   }
 
-  // Guardar tarjetas en el almacenamiento
-  saveCards() {
-    this.storage.set('cards', this.cards);
-  }
-
-  // Guardar la tarjeta seleccionada en el almacenamiento
-  saveSelectedCard() {
+  saveCardsToStorage() {
+    this.storage.setUserCards(this.email, this.cards);
     if (this.selectedCard) {
-      this.storage.set('selectedCard', this.selectedCard.name);
+      this.storage.set(`${this.email}_selectedCard`, this.selectedCard);
     }
   }
 
@@ -54,12 +50,7 @@ export class PaymentsPage implements OnInit {
       inputs: [
         { name: 'name', type: 'text', placeholder: 'Nombre de la Tarjeta', attributes: { maxlength: 20 } },
         { name: 'holderName', type: 'text', placeholder: 'Titular de la Tarjeta', attributes: { maxlength: 30 } },
-        {
-          name: 'number',
-          type: 'text',
-          placeholder: 'Número de Tarjeta (16 dígitos)',
-          attributes: { maxlength: 19 }
-        },
+        { name: 'number', type: 'text', placeholder: 'Número de Tarjeta (16 dígitos)', attributes: { maxlength: 19 } },
         { name: 'expiry', type: 'text', placeholder: 'MM/AA' },
         { name: 'cvc', type: 'password', placeholder: 'CVC (3 dígitos)', attributes: { maxlength: 3 } }
       ],
@@ -80,10 +71,9 @@ export class PaymentsPage implements OnInit {
               };
               this.cards.push(formattedCard);
               if (!this.selectedCard) {
-                this.selectedCard = formattedCard;
-                this.saveSelectedCard(); // Guardar la selección inicial
+                this.selectCard(formattedCard);
               }
-              this.saveCards(); // Guardar tarjetas actualizadas
+              this.saveCardsToStorage();
               return true;
             }
           }
@@ -94,8 +84,7 @@ export class PaymentsPage implements OnInit {
     await alert.present();
   }
 
-  async editCard(card: Card, event: Event) {
-    event.stopPropagation();
+  async editCard(card: Card) {
     const alert = await this.alertController.create({
       header: 'Editar Tarjeta',
       backdropDismiss: false,
@@ -121,33 +110,9 @@ export class PaymentsPage implements OnInit {
               card.number = data.number.replace(/\s+/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
               card.expiry = data.expiry;
               card.cvc = '***';
-              this.saveCards(); // Guardar tarjetas actualizadas
+              this.saveCardsToStorage();
               return true;
             }
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async deleteCard(card: Card, event: Event) {
-    event.stopPropagation();
-    const alert = await this.alertController.create({
-      header: 'Eliminar Tarjeta',
-      message: '¿Estás seguro de que deseas eliminar esta tarjeta?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.cards = this.cards.filter(c => c !== card);
-            if (this.selectedCard === card) {
-              this.selectedCard = this.cards.length > 0 ? this.cards[0] : null;
-              this.saveSelectedCard(); // Actualizar la tarjeta seleccionada después de la eliminación
-            }
-            this.saveCards(); // Guardar tarjetas actualizadas
           }
         }
       ]
@@ -165,7 +130,6 @@ export class PaymentsPage implements OnInit {
       buttons: ['Volver a intentarlo'],
       cssClass: 'validation-alert'
     });
-
     await alert.present();
   }
 
@@ -189,9 +153,31 @@ export class PaymentsPage implements OnInit {
     return errors;
   }
 
-  // Seleccionar tarjeta como predeterminada y guardarla en el almacenamiento
   selectCard(card: Card) {
     this.selectedCard = card;
-    this.saveSelectedCard(); // Guardar la tarjeta seleccionada
+    this.storage.set(`${this.email}_selectedCard`, this.selectedCard);
+  }
+
+  async deleteCard(card: Card) {
+    const alert = await this.alertController.create({
+      header: 'Eliminar Tarjeta',
+      message: '¿Estás seguro de que deseas eliminar esta tarjeta?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.cards = this.cards.filter(c => c !== card);
+            if (this.selectedCard === card) {
+              this.selectedCard = this.cards.length > 0 ? this.cards[0] : null;
+              this.storage.set(`${this.email}_selectedCard`, this.selectedCard);
+            }
+            this.saveCardsToStorage();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
