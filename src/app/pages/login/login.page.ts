@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras,Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/service/firebase.service';
-import { Tab1Page } from 'src/app/tab1/tab1.page';
+
 
 @Component({
   selector: 'app-login',
@@ -23,7 +23,10 @@ export class LoginPage implements OnInit {
     try {
       let user=await this.firebase.Auth(this.email,this.password);
       console.log(user);
-      this.router.navigateByUrl("/tabs/tab1")
+      const navigationExtras:NavigationExtras = {
+        queryParams: {email: this.email}
+      };
+      this.router.navigate(['/tabs/tab1'], navigationExtras)
     } catch (error) {
       console.log(error);
       this.popAlert();
