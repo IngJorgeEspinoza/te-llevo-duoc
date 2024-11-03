@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { StorageService } from 'src/app/service/storage.service';
 
 interface Card {
   name: string;
@@ -14,14 +15,38 @@ interface Card {
   templateUrl: './payments.page.html',
   styleUrls: ['./payments.page.scss'],
 })
-export class PaymentsPage {
+export class PaymentsPage implements OnInit {
 
   cards: Card[] = [];
   selectedCard: Card | null = null;
 
-  constructor(private alertController: AlertController) { }
+  constructor(private alertController: AlertController, private storage: StorageService) { }
 
-  // Agregar tarjeta
+  ngOnInit() {
+    // Cargar las tarjetas almacenadas y la tarjeta seleccionada al iniciar la página
+    const storedCards = this.storage.get('cards');
+    const selectedCardName = this.storage.get('selectedCard');
+    if (storedCards) {
+      this.cards = storedCards;
+      // Intentar establecer la tarjeta seleccionada si coincide el nombre con alguna tarjeta guardada
+      if (selectedCardName) {
+        this.selectedCard = this.cards.find(card => card.name === selectedCardName) || null;
+      }
+    }
+  }
+
+  // Guardar tarjetas en el almacenamiento
+  saveCards() {
+    this.storage.set('cards', this.cards);
+  }
+
+  // Guardar la tarjeta seleccionada en el almacenamiento
+  saveSelectedCard() {
+    if (this.selectedCard) {
+      this.storage.set('selectedCard', this.selectedCard.name);
+    }
+  }
+
   async addCard() {
     const alert = await this.alertController.create({
       header: 'Agregar Tarjeta',
@@ -56,7 +81,9 @@ export class PaymentsPage {
               this.cards.push(formattedCard);
               if (!this.selectedCard) {
                 this.selectedCard = formattedCard;
+                this.saveSelectedCard(); // Guardar la selección inicial
               }
+              this.saveCards(); // Guardar tarjetas actualizadas
               return true;
             }
           }
@@ -67,7 +94,6 @@ export class PaymentsPage {
     await alert.present();
   }
 
-  // Editar tarjeta
   async editCard(card: Card, event: Event) {
     event.stopPropagation();
     const alert = await this.alertController.create({
@@ -95,6 +121,7 @@ export class PaymentsPage {
               card.number = data.number.replace(/\s+/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
               card.expiry = data.expiry;
               card.cvc = '***';
+              this.saveCards(); // Guardar tarjetas actualizadas
               return true;
             }
           }
@@ -105,21 +132,43 @@ export class PaymentsPage {
     await alert.present();
   }
 
-  // Mostrar errores de validación. No he podido hacer que se muestre bien. quiero que se vea como un listado
+  async deleteCard(card: Card, event: Event) {
+    event.stopPropagation();
+    const alert = await this.alertController.create({
+      header: 'Eliminar Tarjeta',
+      message: '¿Estás seguro de que deseas eliminar esta tarjeta?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.cards = this.cards.filter(c => c !== card);
+            if (this.selectedCard === card) {
+              this.selectedCard = this.cards.length > 0 ? this.cards[0] : null;
+              this.saveSelectedCard(); // Actualizar la tarjeta seleccionada después de la eliminación
+            }
+            this.saveCards(); // Guardar tarjetas actualizadas
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
   async showValidationErrors(errors: string[]) {
-    const formattedErrors = ' ' + errors.map(error => `${error}`).join('\n') + ' ';
-  
+    const formattedErrors = errors.map(error => ` ${error} `).join('');
+
     const alert = await this.alertController.create({
       header: 'Datos incorrectos o incompletos',
       message: formattedErrors,
       buttons: ['Volver a intentarlo'],
       cssClass: 'validation-alert'
     });
-  
+
     await alert.present();
   }
 
-  // Validadores
   validateForm(data: any): string[] {
     const errors: string[] = [];
     if (!data.name || data.name.trim().length < 3) {
@@ -140,31 +189,9 @@ export class PaymentsPage {
     return errors;
   }
 
-  // Tarjeta predeterminada
+  // Seleccionar tarjeta como predeterminada y guardarla en el almacenamiento
   selectCard(card: Card) {
     this.selectedCard = card;
-  }
-
-  // Eliminar tarjeta
-  async deleteCard(card: Card, event: Event) {
-    event.stopPropagation();
-    const alert = await this.alertController.create({
-      header: 'Eliminar Tarjeta',
-      message: '¿Estás seguro de que deseas eliminar esta tarjeta?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.cards = this.cards.filter(c => c !== card);
-            if (this.selectedCard === card) {
-              this.selectedCard = this.cards.length > 0 ? this.cards[0] : null;
-            }
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+    this.saveSelectedCard(); // Guardar la tarjeta seleccionada
   }
 }
