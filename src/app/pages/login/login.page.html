@@ -13,11 +13,7 @@
 
   <!-- Logo -->
   <div class="ion-text-center">
-    <ion-img
-      src="assets/images/logo.png"
-      alt="Logo de Te Llevo DUOC"
-      class="logo">
-    </ion-img>
+    <ion-img src="assets/images/logo.png" alt="Logo de Te Llevo DUOC" class="logo"></ion-img>
   </div>
 
   <!-- Formulario del Login -->
@@ -42,7 +38,7 @@
 
   <!-- Opciones: contraseña y crear cuenta -->
   <div class="ion-text-center ion-padding">
-    <ion-button fill="clear" [routerLink]="['/recovery']">¿Olvidaste tu contraseña?</ion-button>
-    <ion-button fill="clear" [routerLink]="['/register']">Crear Cuenta</ion-button>
+    <ion-button fill="clear" routerLink="/recovery">¿Olvidaste tu contraseña?</ion-button>
+    <ion-button fill="clear" routerLink="/register">Crear Cuenta</ion-button>
   </div>
 </ion-content>

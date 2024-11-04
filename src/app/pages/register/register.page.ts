@@ -3,6 +3,7 @@ import { FirebaseService } from 'src/app/service/firebase.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { ApiService } from 'src/app/service/api.service';
 
 @Component({
   selector: 'app-register',
@@ -10,10 +11,11 @@ import { AlertController, LoadingController } from '@ionic/angular';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-
   registerForm!: FormGroup;
   showPassword = false;
   showConfirmPassword = false;
+  imageFile: File | null = null;
+  imageTouched = false;
 
   days: number[] = [];
   months = [
@@ -41,7 +43,8 @@ export class RegisterPage implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private alertController: AlertController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private apiService: ApiService
   ) { }
 
   ngOnInit() {
@@ -50,6 +53,7 @@ export class RegisterPage implements OnInit {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email, this.emailInstitutionalValidator]],
       nombre: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],  // Validación para un número de 9 dígitos
       dia: ['', Validators.required],
       mes: ['', Validators.required],
       anio: ['', Validators.required],
@@ -69,14 +73,12 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  // confirmar que las contraseñas coinciden
   passwordMatchValidator(formGroup: AbstractControl): ValidationErrors | null {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  // Validación correo DUOC
   emailInstitutionalValidator(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
     if (email && email.indexOf('@') !== -1) {
@@ -90,7 +92,6 @@ export class RegisterPage implements OnInit {
     return null;
   }
 
-  // Validación fecha de nacimiento
   dateValidator(formGroup: AbstractControl): ValidationErrors | null {
     const dia = formGroup.get('dia')?.value;
     const mes = formGroup.get('mes')?.value;
@@ -108,24 +109,38 @@ export class RegisterPage implements OnInit {
   }
 
   async register() {
-    if (this.registerForm.valid) {
-      const { email, password, nombre, dia, mes, anio } = this.registerForm.value;
-      const fechaNacimiento = new Date(anio, mes - 1, dia);
+    if (this.registerForm.valid && this.imageFile) {
+      const { email, password, nombre, telefono, dia, mes, anio } = this.registerForm.value;
+      const fechaNacimiento = `${anio}-${mes}-${dia}`;
       const loading = await this.loadingController.create({
         message: 'Creando cuenta...'
       });
       await loading.present();
       try {
-        // Lógica para registrar el usuario
         await this.firebase.register(email, password);
+        const token = await this.firebase.getTokenID() || '';
+
+        await this.apiService.agregarUsuario({
+          p_nombre: nombre,
+          p_correo_electronico: email,
+          p_fecha_nacimiento: fechaNacimiento,
+          p_telefono: telefono,
+          token
+        }, this.imageFile as File);
+
         await loading.dismiss();
         this.presentAlert('Cuenta creada', 'Tu cuenta ha sido creada exitosamente.');
         this.router.navigateByUrl('/login');
-      } catch (error) {
+      } catch (error: any) {
         await loading.dismiss();
-        this.presentAlert('Error', 'No se pudo crear la cuenta. Inténtalo de nuevo.');
+        if (error.code === 'auth/email-already-in-use') {
+          this.presentAlert('Error', 'El correo electrónico ya está en uso. Intenta con otro.');
+        } else {
+          this.presentAlert('Error', 'No se pudo crear la cuenta. Inténtalo de nuevo.');
+        }
       }
     } else {
+      this.imageTouched = true;
       this.presentAlert('Formulario incompleto', 'Por favor, completa todos los campos correctamente.');
     }
   }
@@ -136,6 +151,14 @@ export class RegisterPage implements OnInit {
 
   toggleConfirmPasswordVisibility() {
     this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  onImageSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.imageFile = fileInput.files[0];
+      this.imageTouched = true;
+    }
   }
 
   async presentAlert(header: string, message: string) {
