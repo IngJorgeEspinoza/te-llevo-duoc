@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/compat/auth-guard';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
@@ -8,7 +8,7 @@ const redirectLogin = () => redirectUnauthorizedTo(['/login']);
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -27,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'recovery',
-    loadChildren: () => import('./pages/recovery/recovery.module').then(m => m.RecoveryPageModule),
+    loadChildren: () => import('./pages/recovery/recovery.module').then(m => m.RecoveryPageModule)
   },
   {
     path: 'help',
@@ -49,13 +49,13 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: PageNotFoundComponent,
-  },
+    component: PageNotFoundComponent
+  }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { useHash: true, preloadingStrategy: PreloadAllModules })
   ],
   exports: [RouterModule]
 })

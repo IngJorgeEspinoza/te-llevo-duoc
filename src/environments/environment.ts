@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  apiUrl: 'https://uber-nodejs-server-git-d61f89-guillermovillacuratorres-projects.vercel.app/api',
   firebaseConfig: {
     apiKey: "AIzaSyCJv1_vxETqH5faZXP1Mp9TrI1SZ6hAM-Y",
     authDomain: "te-llevo-duoc-60bbd.firebaseapp.com",
