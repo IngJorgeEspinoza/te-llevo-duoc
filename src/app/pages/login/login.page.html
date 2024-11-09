@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Te Llevo DUOC</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">¿Vamos a casa?</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Logo -->
+  <div class="ion-text-center">
+    <ion-img src="assets/images/logo.png" alt="Logo de Te Llevo DUOC" class="logo"></ion-img>
+  </div>
+
+  <!-- Formulario del Login -->
+  <div class="login-form">
+    <ion-item>
+      <ion-label>Ingresa tus datos</ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="email" type="email" placeholder="Correo Electrónico"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="password" type="password" placeholder="Contraseña">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+
+    <!-- Botón -->
+    <ion-button (click)="login()" expand="block" type="submit">Iniciar Sesión</ion-button>
+  </div>
+
+  <!-- Opciones: contraseña y crear cuenta -->
+  <div class="ion-text-center ion-padding">
+    <ion-button fill="clear" routerLink="/recovery">¿Olvidaste tu contraseña?</ion-button>
+    <ion-button fill="clear" routerLink="/register">Crear Cuenta</ion-button>
+  </div>
+</ion-content>

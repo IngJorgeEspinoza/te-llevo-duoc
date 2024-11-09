@@ -1,0 +1,115 @@
+/* help.page.scss */
+
+/* Definición del Contenedor */
+.content-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+ion-header {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-text-color);
+}
+
+ion-title {
+  font-weight: bold;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--ion-border-color);
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-answer {
+  padding: 10px 15px;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.additional-help {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.additional-help p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: var(--ion-text-color);
+}
+
+ion-button {
+  --border-radius: 20px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --background: var(--ion-color-success);
+  --color: #fff;
+}
+
+ion-button:hover {
+  --background: darken(var(--ion-color-success), 10%);
+}
+
+ion-card {
+  margin-top: 20px;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+ion-card-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+ion-card-content p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: var(--ion-text-color);
+}
+
+ion-footer {
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
+}
+
+ion-footer ion-card {
+  margin: 0;
+  background: var(--ion-background-color);
+}
+
+@media (max-width: 600px) {
+  .content-wrapper {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  ion-card-content p {
+    font-size: 14px;
+  }
+
+  .additional-help p {
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estilos Específicos para Modo Oscuro */
+.dark {
+  --ion-background-color: #121212;
+  --ion-text-color: #ffffff;
+  --ion-border-color: #2c2c2c;
+
+  /* Puedes sobrescribir o añadir más variables si es necesario */
+}

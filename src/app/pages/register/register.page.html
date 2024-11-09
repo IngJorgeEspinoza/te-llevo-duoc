@@ -1,0 +1,128 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Te Llevo DUOC</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="ion-text-center">
+    <ion-img src="assets/images/logo.png" alt="Logo de Te Llevo DUOC" class="logo"></ion-img>
+    <h2>Crear Cuenta</h2>
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <ion-list>
+
+      <!-- Campo de Correo Electrónico -->
+      <ion-item>
+        <ion-label position="stacked">Correo Electrónico de DUOC UC</ion-label>
+        <ion-input formControlName="email" type="email" placeholder="Ingresa tu correo"></ion-input>
+      </ion-item>
+      <div *ngIf="registerForm.get('email')?.errors && registerForm.get('email')?.touched" class="error-message">
+        <ion-text color="danger">
+          <p *ngIf="registerForm.get('email')?.errors?.['required']">El correo es requerido.</p>
+          <p *ngIf="registerForm.get('email')?.errors?.['email']">Ingresa un correo válido.</p>
+          <p *ngIf="registerForm.get('email')?.errors?.['notInstitutionalEmail']">Debes usar tu correo institucional (&#64;duocuc.cl).</p>
+        </ion-text>
+      </div>
+
+      <!-- Campo de Nombre y Apellidos -->
+      <ion-item>
+        <ion-label position="stacked">Nombre y Apellidos</ion-label>
+        <ion-input formControlName="nombre" type="text" placeholder="Ingresa tu nombre completo"></ion-input>
+      </ion-item>
+      <div *ngIf="registerForm.get('nombre')?.errors && registerForm.get('nombre')?.touched" class="error-message">
+        <ion-text color="danger">
+          <p *ngIf="registerForm.get('nombre')?.errors?.['required']">El nombre es requerido.</p>
+        </ion-text>
+      </div>
+
+      <!-- Campo de Teléfono -->
+      <ion-item>
+        <ion-label position="stacked">Teléfono</ion-label>
+        <ion-input formControlName="telefono" type="tel" placeholder="Ingresa tu número de teléfono"></ion-input>
+      </ion-item>
+      <div *ngIf="registerForm.get('telefono')?.errors && registerForm.get('telefono')?.touched" class="error-message">
+        <ion-text color="danger">
+          <p *ngIf="registerForm.get('telefono')?.errors?.['required']">El teléfono es requerido.</p>
+        </ion-text>
+      </div>
+
+      <!-- Imagen de Perfil -->
+      <ion-item>
+        <ion-label position="stacked">Foto de Perfil</ion-label>
+        <input type="file" (change)="onImageSelected($event)" accept="image/*" aria-label="Subir foto de perfil" title="Subir foto de perfil">
+      </ion-item>
+      <div *ngIf="!imageFile && imageTouched" class="error-message">
+        <ion-text color="danger">
+          <p>La imagen es obligatoria.</p>
+        </ion-text>
+      </div>
+
+      <!-- Fecha de Nacimiento - Organización en línea -->
+      <ion-item>
+        <ion-label position="stacked">Fecha de Nacimiento</ion-label>
+        <div class="date-select-group">
+          <ion-select formControlName="dia" placeholder="Día" interface="popover" cancelText="Cancelar" okText="Seleccionar">
+            <ion-select-option *ngFor="let d of days" [value]="d">{{ d }}</ion-select-option>
+          </ion-select>
+
+          <ion-select formControlName="mes" placeholder="Mes" interface="popover" cancelText="Cancelar" okText="Seleccionar">
+            <ion-select-option *ngFor="let m of months" [value]="m.value">{{ m.name }}</ion-select-option>
+          </ion-select>
+
+          <ion-select formControlName="anio" placeholder="Año" interface="popover" cancelText="Cancelar" okText="Seleccionar">
+            <ion-select-option *ngFor="let y of years" [value]="y">{{ y }}</ion-select-option>
+          </ion-select>
+        </div>
+      </ion-item>
+      <div *ngIf="dateOfBirthInvalid" class="error-message">
+        <ion-text color="danger">
+          <p>La fecha de nacimiento es inválida o incompleta.</p>
+        </ion-text>
+      </div>
+
+      <!-- Contraseña y Confirmación -->
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Ingresa tu contraseña"></ion-input>
+        <ion-icon [name]="showPassword ? 'eye' : 'eye-off'" slot="end" (click)="togglePasswordVisibility()"></ion-icon>
+      </ion-item>
+      <div *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched" class="error-message">
+        <ion-text color="danger">
+          <p *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es requerida.</p>
+          <p *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</p>
+        </ion-text>
+      </div>
+
+      <!-- Confirmación de Contraseña -->
+      <ion-item>
+        <ion-label position="stacked">Confirmar Contraseña</ion-label>
+        <ion-input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirma tu contraseña"></ion-input>
+        <ion-icon [name]="showConfirmPassword ? 'eye' : 'eye-off'" slot="end" (click)="toggleConfirmPasswordVisibility()"></ion-icon>
+      </ion-item>
+      <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" class="error-message">
+        <ion-text color="danger">
+          <p>Las contraseñas no coinciden.</p>
+        </ion-text>
+      </div>
+    </ion-list>
+
+    <div class="button-container">
+      <ion-button type="submit" [disabled]="!registerForm.valid">Crear Cuenta</ion-button>
+    </div>
+  </form>
+
+  <div class="ion-text-center ion-padding">
+    <p>¿Ya tienes una cuenta? <a [routerLink]="['/login']">Inicia sesión</a></p>
+  </div>
+</ion-content>
+
+<!-- CSS para organizar los campos de fecha en línea -->
+<style>
+  .date-select-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+</style>

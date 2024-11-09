@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Recuperar Contraseña</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <!-- Imagen o Logo -->
+  <div class="ion-text-center">
+    <ion-img
+      src="assets/images/logo.png"
+      alt="Logo de Te Llevo DUOC"
+      class="logo">
+    </ion-img>
+    <h2>Recuperar Contraseña</h2>
+  </div>
+
+  <!-- Formulario -->
+  <form [formGroup]="recoveryForm" (ngSubmit)="recoverPassword()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Correo Institucional</ion-label>
+        <ion-input formControlName="email" type="email" placeholder="Ingresa tu correo institucional"></ion-input>
+      </ion-item>
+      <div *ngIf="recoveryForm.get('email')?.errors && recoveryForm.get('email')?.touched" class="error-message">
+        <ion-text color="danger">
+          <p *ngIf="recoveryForm.get('email')?.errors?.['required']">El correo es requerido.</p>
+          <p *ngIf="recoveryForm.get('email')?.errors?.['email']">Ingresa un correo válido.</p>
+          <p *ngIf="recoveryForm.get('email')?.errors?.['notInstitutionalEmail']">Debes usar tu correo institucional (&#64;duocuc.cl).</p>
+        </ion-text>
+      </div>
+
+    </ion-list>
+
+    <!-- Botoncito -->
+    <div class="button-container">
+      <ion-button type="submit" [disabled]="!recoveryForm.valid">Enviar Correo de Recuperación</ion-button>
+    </div>
+  </form>
+
+  <!-- volver al inicio -->
+  <div class="ion-text-center ion-padding">
+    <p>¿Recordaste tu contraseña? <a [routerLink]="['/login']">Inicia sesión</a></p>
+  </div>
+
+</ion-content>

@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Pagos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <!-- esto es para mostrar la tarjeta seleccionada -->
+  <div *ngIf="selectedCard">
+    <h3>Tarjeta Seleccionada: {{ selectedCard.name }}</h3>
+  </div>
+
+  <!-- lista -->
+  <div class="cards-container" *ngIf="cards.length > 0">
+    <ion-list>
+      <ion-item *ngFor="let card of cards" (click)="selectCard(card)">
+        <div class="card">
+          <h2>{{ card.name }}</h2>
+          <p>{{ card.holderName }}</p>
+          <p>{{ card.number }}</p>
+          <div class="card-info">
+            <span>Exp: {{ card.expiry }}</span>
+            <span>CVC: ****</span> 
+          </div>
+          <ion-button size="small" color="secondary" (click)="editCard(card)">Editar</ion-button>
+          <ion-button size="small" color="danger" (click)="deleteCard(card)">Eliminar</ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- boton para agregar tarjetas -->
+  <div *ngIf="cards.length === 0" class="no-card">
+    <p>No tienes tarjetas asociadas.</p>
+  </div>
+  <ion-button expand="block" color="primary" (click)="addCard()">Agregar Tarjeta</ion-button>
+
+</ion-content>

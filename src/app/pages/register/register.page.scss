@@ -1,0 +1,69 @@
+.logo {
+  width: 240px;
+  height: auto;
+  margin: 20px auto;
+}
+
+h2 {
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+ion-list {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+ion-item {
+  margin-bottom: 15px;
+}
+
+ion-button {
+  margin-top: 20px;
+}
+
+.ion-padding {
+  padding-top: 0;
+}
+
+.error-message {
+  margin-left: 16px;
+  font-size: 14px;
+}
+
+.error-message p {
+  margin: 0;
+}
+
+.date-of-birth-container {
+  display: flex;
+  justify-content: space-between;
+
+  ion-item {
+    flex: 1;
+    margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    ion-label {
+      font-size: 14px;
+    }
+
+    ion-select {
+      width: 100%;
+    }
+  }
+}
+
+.button-container {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.button-container ion-button {
+  width: 100%;
+}
