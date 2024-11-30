@@ -1,11 +1,11 @@
-.image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+.button-container {
+  margin-top: 20px;
 }
 
-ion-img {
-  width: 80%;
-  max-width: 400px;
+ion-item {
+  --highlight-color-invalid: #eb445a;
+}
+
+ion-textarea {
+  min-height: 100px;
 }

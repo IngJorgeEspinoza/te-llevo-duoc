@@ -1,27 +1,60 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Publicar Viaje
-    </ion-title>
-    <ion-buttons slot="end" [routerLink]="['/help']">
-      <ion-button> 
-        <ion-icon slot="icon-only" name="help-circle-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>Publicar Viaje</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Publicar Viaje</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <form [formGroup]="tripForm" (ngSubmit)="publishTrip()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Origen</ion-label>
+        <ion-input formControlName="origen" placeholder="Ciudad de origen"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="tripForm.get('origen')?.touched && tripForm.get('origen')?.invalid">
+        <ion-text color="danger">El origen es obligatorio.</ion-text>
+      </ion-item>
 
-  <div class="image-container">
-    <ion-img src="assets/images/tab2_vista.png" alt="Vista de Tab2"></ion-img>
-  </div>
+      <ion-item>
+        <ion-label position="stacked">Destino</ion-label>
+        <ion-input formControlName="destino" placeholder="Ciudad de destino"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="tripForm.get('destino')?.touched && tripForm.get('destino')?.invalid">
+        <ion-text color="danger">El destino es obligatorio.</ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Fecha y Hora de Salida</ion-label>
+        <ion-datetime formControlName="fechaHoraSalida" display-format="DD/MM/YYYY HH:mm" placeholder="Selecciona fecha y hora"></ion-datetime>
+      </ion-item>
+      <ion-item *ngIf="tripForm.get('fechaHoraSalida')?.touched && tripForm.get('fechaHoraSalida')?.invalid">
+        <ion-text color="danger">La fecha y hora de salida son obligatorias.</ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Número de Asientos Disponibles</ion-label>
+        <ion-input formControlName="asientosDisponibles" type="number" placeholder="Cantidad de asientos"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="tripForm.get('asientosDisponibles')?.touched && tripForm.get('asientosDisponibles')?.invalid">
+        <ion-text color="danger">Debe ingresar un número válido de asientos.</ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Precio por Asiento</ion-label>
+        <ion-input formControlName="precioAsiento" type="number" placeholder="Precio en CLP"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="tripForm.get('precioAsiento')?.touched && tripForm.get('precioAsiento')?.invalid">
+        <ion-text color="danger">Debe ingresar un precio válido.</ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Descripción Adicional</ion-label>
+        <ion-textarea formControlName="descripcion" placeholder="Información adicional sobre el viaje"></ion-textarea>
+      </ion-item>
+    </ion-list>
+
+    <div class="button-container">
+      <ion-button type="submit" expand="block" [disabled]="!tripForm.valid">Publicar Viaje</ion-button>
+    </div>
+  </form>
 </ion-content>

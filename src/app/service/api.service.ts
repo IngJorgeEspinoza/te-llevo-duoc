@@ -48,7 +48,7 @@ export class ApiService {
   // Método para obtener el ID del usuario
   async getUserId(): Promise<string> {
     try {
-      const token = await this.firebaseService.getTokenID(); // Obtener el token de Firebase
+      const token = await this.firebaseService.getTokenID();
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
@@ -68,6 +68,18 @@ export class ApiService {
         'No se pudo obtener el ID del usuario. Verifica tu conexión o la configuración del servidor.'
       );
     }
+  }
+
+  // Método para publicar un viaje
+  async publicarViaje(data: BodyTrip): Promise<any> {
+    const token = await this.firebaseService.getTokenID();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return await lastValueFrom(
+      this.http.post<any>(`${environment.apiUrl}/viaje/publicar`, data, { headers })
+    );
   }
 }
 
@@ -90,4 +102,14 @@ export interface BodyVehicle {
   p_color: string;
   p_tipo_combustible: string;
   token: string;
+}
+
+// Interfaz para el cuerpo de la solicitud al publicar un viaje
+export interface BodyTrip {
+  origen: string;
+  destino: string;
+  fechaHoraSalida: string;
+  asientosDisponibles: number;
+  precioAsiento: number;
+  descripcion?: string;
 }
