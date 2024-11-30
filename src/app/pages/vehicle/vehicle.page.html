@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Agregar Vehículo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <form [formGroup]="vehicleForm" (ngSubmit)="addVehicle()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Patente</ion-label>
+        <ion-input formControlName="patente" placeholder="Ej: ABCD-1234"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Marca</ion-label>
+        <ion-input formControlName="marca" placeholder="Ej: Toyota"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Modelo</ion-label>
+        <ion-input formControlName="modelo" placeholder="Ej: Corolla"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Año</ion-label>
+        <ion-input formControlName="anio" type="number" placeholder="Ej: 2020"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Color</ion-label>
+        <ion-input formControlName="color" placeholder="Ej: Rojo"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Tipo de Combustible</ion-label>
+        <ion-select formControlName="tipo_combustible" placeholder="Selecciona">
+          <ion-select-option value="Gasolina">Gasolina</ion-select-option>
+          <ion-select-option value="Diesel">Diesel</ion-select-option>
+          <ion-select-option value="Eléctrico">Eléctrico</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Foto del Vehículo</ion-label>
+        <input type="file" (change)="onImageSelected($event)" accept="image/*">
+      </ion-item>
+      <div *ngIf="!imageFile && imageTouched" class="error-message">
+        <ion-text color="danger">La imagen es obligatoria.</ion-text>
+      </div>
+    </ion-list>
+
+    <div class="button-container">
+      <ion-button type="submit" expand="block" [disabled]="!vehicleForm.valid">Guardar Vehículo</ion-button>
+    </div>
+  </form>
+</ion-content>

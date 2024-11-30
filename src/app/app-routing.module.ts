@@ -48,9 +48,17 @@ const routes: Routes = [
     data: { authGuardPipe: redirectLogin }
   },
   {
+    path: 'vehicle',
+    loadChildren: () => import('./pages/vehicle/vehicle.module').then( m => m.VehiclePageModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectLogin }
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }
+
+
 ];
 
 @NgModule({
