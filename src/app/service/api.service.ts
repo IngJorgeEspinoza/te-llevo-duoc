@@ -23,7 +23,7 @@ export interface BodyTrip {
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = `${environment.apiUrl}/api`.replace(/\/$/, '');
+  private baseUrl = environment.apiUrl.replace(/\/$/, '');
 
   constructor(private http: HttpClient, private storage: StorageService) {}
 

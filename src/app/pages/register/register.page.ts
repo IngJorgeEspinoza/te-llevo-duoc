@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/service/api.service';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { StorageService } from 'src/app/service/storage.service';
+import { AngularFireAuth } from '@angular/fire/compat/auth'; // Asegúrate de importar AngularFireAuth
 
 @Component({
   selector: 'app-register',
@@ -27,7 +28,8 @@ export class RegisterPage implements OnInit {
     private storage: StorageService,
     private router: Router,
     private alertController: AlertController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private afAuth: AngularFireAuth // Inyectamos AngularFireAuth
   ) {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -99,13 +101,26 @@ export class RegisterPage implements OnInit {
       await loading.present();
 
       try {
-        const { email, nombre, telefono, password, dia, mes, anio } = this.registerForm.value;
-        const token = 'token_simulado'; // Reemplaza con la lógica real para obtener el token.
+        const { email, nombre, telefono, password } = this.registerForm.value;
+        
+        // Registro de usuario con Firebase Authentication
+        const userCredential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+        
+        // Obtener token de autenticación
+        const token = await userCredential.user?.getIdToken();
+        if (!token) {
+          throw new Error('No se pudo obtener el token de autenticación');
+        }
 
+        // Almacenar datos en Firebase y en Storage
         await this.apiService.agregarUsuario(
           { p_nombre: nombre, p_correo_electronico: email, p_telefono: telefono, token },
           this.imageFile
         );
+
+        // Almacenar el token y email en Storage
+        this.storage.set('email', email);
+        this.storage.set('tokenID', token);
 
         await loading.dismiss();
         await this.presentAlert('Cuenta creada', 'Tu cuenta ha sido creada exitosamente.');
