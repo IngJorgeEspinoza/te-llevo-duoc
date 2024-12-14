@@ -1,53 +1,97 @@
+<!-- src/app/pages/history/history.page.html -->
+
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
     </ion-buttons>
-    <ion-title>Historial de Viajes</ion-title>
+    <ion-title>
+      Historial de Viajes
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-list>
-    <ion-item>
-      <ion-label>
-        <h2>05-11-2024</h2>
-        <p>Conductor: Jorge Espinoza</p>
-        <p>Pasajero: Jonathan Roa</p>
-        <p>Total: $2.500</p>
-      </ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>
-        <h2>04-11-2024</h2>
-        <p>Conductor: Jorge Espinoza</p>
-        <p>Pasajero: Martín Henríquez</p>
-        <p>Total: $1.000</p>
-      </ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>
-        <h2>03-11-2024</h2>
-        <p>Conductor: Jorge Espinoza</p>
-        <p>Pasajero: Nelson Maureira</p>
-        <p>Total: $50.000</p>
-      </ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>
-        <h2>03-11-2024</h2>
-        <p>Conductor: Jorge Espinoza</p>
-        <p>Pasajero: Daniel Rioseco</p>
-        <p>Total: $500</p>
-      </ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>
-        <h2>04-11-2024</h2>
-        <p>Conductor: Jorge Espinoza</p>
-        <p>Pasajero: Matías Yefe</p>
-        <p>Total: $750</p>
-      </ion-label>
-    </ion-item>
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <!-- Si hay viajes -->
+    <ion-list *ngIf="viajes.length > 0">
+      <div class="history-item" *ngFor="let viaje of viajes">
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <ion-icon name="car" size="large" class="thumbnail-icon"></ion-icon>
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ viaje.fecha }}</h2>
+            <div class="route-info">
+              <p>
+                <ion-icon name="location-outline"></ion-icon>
+                {{ viaje.origen }}
+              </p>
+              <ion-icon name="arrow-down-outline" class="arrow-icon"></ion-icon>
+              <p>
+                <ion-icon name="location"></ion-icon>
+                {{ viaje.destino }}
+              </p>
+            </div>
+            <div class="details">
+              <p class="conductor" *ngIf="viaje.conductorNombre">
+                <ion-icon name="person-outline"></ion-icon>
+                Conductor: {{ viaje.conductorNombre }}
+              </p>
+              <p class="pasajero" *ngIf="viaje.pasajeroNombre">
+                <ion-icon name="people-outline"></ion-icon>
+                Pasajero: {{ viaje.pasajeroNombre }}
+              </p>
+              <p class="costo">
+                <ion-icon name="cash-outline"></ion-icon>
+                ${{ viaje.costo }}
+              </p>
+            </div>
+          </ion-label>
+          <ion-chip [color]="getEstadoColor(viaje.estado)" slot="end">
+            {{ viaje.estado }}
+          </ion-chip>
+        </ion-item>
+      </div>
     </ion-list>
+
+    <!-- Si no hay viajes -->
+    <div class="empty-state" *ngIf="viajes.length === 0">
+      <ion-icon name="car-outline" class="empty-icon"></ion-icon>
+      <h3>No hay viajes registrados</h3>
+      <p>Aquí aparecerán tus viajes cuando realices uno</p>
+    </div>
+  </ng-container>
+
+  <!-- Estado de error -->
+  <div class="error-state" *ngIf="error">
+    <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
+    <h3>Ups, algo salió mal</h3>
+    <p>{{ error }}</p>
+    <ion-button (click)="cargarViajes()">
+      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+      Intentar nuevamente
+    </ion-button>
+  </div>
+
+  <!-- Skeleton loading -->
+  <ion-list *ngIf="isLoading">
+    <ion-item *ngFor="let i of [1,2,3,4,5]">
+      <ion-thumbnail slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-label>
+        <h2><ion-skeleton-text animated style="width: 50%"></ion-skeleton-text></h2>
+        <p><ion-skeleton-text animated style="width: 80%"></ion-skeleton-text></p>
+        <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
+      </ion-label>
+      <ion-chip slot="end">
+        <ion-skeleton-text animated style="width: 70px"></ion-skeleton-text>
+      </ion-chip>
+    </ion-item>
+  </ion-list>
 </ion-content>

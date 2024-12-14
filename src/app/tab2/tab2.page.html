@@ -17,7 +17,7 @@
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Origen</ion-label>
-        <ion-input formControlName="origen" placeholder="Ciudad de origen"></ion-input>
+        <ion-input formControlName="origen" placeholder="Sede Duoc San Joaquín"></ion-input>
       </ion-item>
       <ion-item *ngIf="tripForm.get('origen')?.touched && tripForm.get('origen')?.invalid">
         <ion-text color="danger">El origen es obligatorio.</ion-text>
@@ -25,7 +25,7 @@
 
       <ion-item>
         <ion-label position="stacked">Destino</ion-label>
-        <ion-input formControlName="destino" placeholder="Ciudad de destino"></ion-input>
+        <ion-input formControlName="destino" placeholder="Dirección de destino"></ion-input>
       </ion-item>
       <ion-item *ngIf="tripForm.get('destino')?.touched && tripForm.get('destino')?.invalid">
         <ion-text color="danger">El destino es obligatorio.</ion-text>

@@ -1,6 +1,8 @@
+// src/app/pages/vehicle/vehicle.page.ts
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from 'src/app/service/api.service';
+import { ApiService, BodyVehicle } from 'src/app/service/api.service';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { StorageService } from 'src/app/service/storage.service';
@@ -38,29 +40,26 @@ export class VehiclePage implements OnInit {
 
   async addVehicle() {
     this.vehicleForm.markAllAsTouched();
-
+  
     if (this.vehicleForm.valid && this.imageFile) {
       const loading = await this.loadingController.create({
-        message: 'Agregando vehículo...',
+        message: 'Agregando vehículo...'
       });
       await loading.present();
-
+  
       try {
-        const email = this.storage.get('email');
+        // 1. Obtener token
         const token = this.storage.get('tokenID');
-
-        if (!email || !token) {
-          throw new Error('Falta el email o token en el almacenamiento.');
+        if (!token) {
+          throw new Error('No hay sesión activa');
         }
 
-        const userResponse = await this.apiService.obtenerUsuario(email);
-        const userId = userResponse?.id;
+        // 2. Obtener ID del usuario
+        const userId = await this.apiService.getUserId();
+        console.log('ID de usuario obtenido:', userId);
 
-        if (!userId) {
-          throw new Error('No se pudo obtener el ID del usuario.');
-        }
-
-        const formData = {
+        // 3. Preparar datos del vehículo
+        const vehicleData: BodyVehicle = {
           p_id_usuario: userId,
           p_patente: this.vehicleForm.value.patente.toUpperCase(),
           p_marca: this.vehicleForm.value.marca,
@@ -68,18 +67,21 @@ export class VehiclePage implements OnInit {
           p_anio: parseInt(this.vehicleForm.value.anio, 10),
           p_color: this.vehicleForm.value.color,
           p_tipo_combustible: this.vehicleForm.value.tipo_combustible,
-          token: token,
+          token: token
         };
-
-        await this.apiService.agregarVehiculo(formData, this.imageFile);
-
+  
+        // 4. Enviar datos a la API
+        console.log('Enviando datos del vehículo:', vehicleData);
+        const response = await this.apiService.agregarVehiculo(vehicleData, this.imageFile);
+        
         await loading.dismiss();
         await this.presentAlert('Éxito', 'Vehículo agregado correctamente');
         this.router.navigate(['/tabs/tab1']);
       } catch (error: any) {
         await loading.dismiss();
         console.error('Error detallado:', error);
-        this.presentAlert('Error', error.message || 'No se pudo agregar el vehículo. Inténtalo de nuevo.');
+        const errorMessage = error.message || 'No se pudo agregar el vehículo. Inténtalo de nuevo.';
+        this.presentAlert('Error', errorMessage);
       }
     } else {
       await this.presentAlert('Formulario incompleto', 'Por favor, completa todos los campos correctamente y sube una imagen.');
@@ -88,7 +90,7 @@ export class VehiclePage implements OnInit {
 
   onImageSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
-    if (fileInput?.files && fileInput.files.length > 0) {
+    if (fileInput.files && fileInput.files.length > 0) {
       this.imageFile = fileInput.files[0];
       this.imageTouched = true;
     }
