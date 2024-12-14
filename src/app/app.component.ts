@@ -38,12 +38,6 @@ export class AppComponent implements OnInit {
     const storedEmail = this.storage.get('email');
     if (storedEmail) {
       this.userEmail = storedEmail;
-
-      // Cargar el nombre de usuario asociado al email
-      const storedName = this.storage.getUserName(this.userEmail);
-      if (storedName) {
-        this.userName = storedName;
-      }
     }
 
     const storedPhoto = this.storage.get('photo');
@@ -110,7 +104,7 @@ export class AppComponent implements OnInit {
           handler: (data) => {
             if (data.name && data.name.trim() !== '') {
               this.userName = data.name.trim();
-              this.storage.setUserName(this.userEmail, this.userName); 
+              // Eliminé las referencias a métodos que no existen
               this.presentAlert('Éxito', 'Tu nombre ha sido actualizado.');
               return true;
             } else {

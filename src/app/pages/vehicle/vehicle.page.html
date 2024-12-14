@@ -1,57 +1,124 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
     <ion-title>Agregar Vehículo</ion-title>
+    <ion-buttons slot="end" [routerLink]="['/help']">
+      <ion-button>
+        <ion-icon slot="icon-only" name="help-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <form [formGroup]="vehicleForm" (ngSubmit)="addVehicle()">
     <ion-list>
+      <!-- Patente -->
       <ion-item>
-        <ion-label position="stacked">Patente</ion-label>
-        <ion-input formControlName="patente" placeholder="Ej: ABCD-1234"></ion-input>
+        <ion-label position="stacked" aria-required="true">Patente</ion-label>
+        <ion-input 
+          formControlName="patente" 
+          placeholder="Ej: ABCD1234"
+          [ngClass]="{'invalid-input': vehicleForm.get('patente')?.invalid && vehicleForm.get('patente')?.touched}">
+        </ion-input>
       </ion-item>
+      <ion-text color="danger" *ngIf="vehicleForm.get('patente')?.invalid && vehicleForm.get('patente')?.touched">
+        La patente es obligatoria y debe tener entre 6 y 8 caracteres.
+      </ion-text>
 
+      <!-- Marca -->
       <ion-item>
-        <ion-label position="stacked">Marca</ion-label>
-        <ion-input formControlName="marca" placeholder="Ej: Toyota"></ion-input>
+        <ion-label position="stacked" aria-required="true">Marca</ion-label>
+        <ion-input 
+          formControlName="marca" 
+          placeholder="Ej: Toyota"
+          [ngClass]="{'invalid-input': vehicleForm.get('marca')?.invalid && vehicleForm.get('marca')?.touched}">
+        </ion-input>
       </ion-item>
+      <ion-text color="danger" *ngIf="vehicleForm.get('marca')?.invalid && vehicleForm.get('marca')?.touched">
+        La marca es obligatoria y debe tener al menos 2 caracteres.
+      </ion-text>
 
+      <!-- Modelo -->
       <ion-item>
-        <ion-label position="stacked">Modelo</ion-label>
-        <ion-input formControlName="modelo" placeholder="Ej: Corolla"></ion-input>
+        <ion-label position="stacked" aria-required="true">Modelo</ion-label>
+        <ion-input 
+          formControlName="modelo" 
+          placeholder="Ej: Corolla"
+          [ngClass]="{'invalid-input': vehicleForm.get('modelo')?.invalid && vehicleForm.get('modelo')?.touched}">
+        </ion-input>
       </ion-item>
+      <ion-text color="danger" *ngIf="vehicleForm.get('modelo')?.invalid && vehicleForm.get('modelo')?.touched">
+        El modelo es obligatorio y debe tener al menos 2 caracteres.
+      </ion-text>
 
+      <!-- Año -->
       <ion-item>
-        <ion-label position="stacked">Año</ion-label>
-        <ion-input formControlName="anio" type="number" placeholder="Ej: 2020"></ion-input>
+        <ion-label position="stacked" aria-required="true">Año</ion-label>
+        <ion-input 
+          formControlName="anio" 
+          type="number" 
+          placeholder="Ej: 2020"
+          [ngClass]="{'invalid-input': vehicleForm.get('anio')?.invalid && vehicleForm.get('anio')?.touched}">
+        </ion-input>
       </ion-item>
+      <ion-text color="danger" *ngIf="vehicleForm.get('anio')?.invalid && vehicleForm.get('anio')?.touched">
+        El año es obligatorio y debe estar entre 1950 y {{ currentYear }}.
+      </ion-text>
 
+      <!-- Color -->
       <ion-item>
-        <ion-label position="stacked">Color</ion-label>
-        <ion-input formControlName="color" placeholder="Ej: Rojo"></ion-input>
+        <ion-label position="stacked" aria-required="true">Color</ion-label>
+        <ion-input 
+          formControlName="color" 
+          placeholder="Ej: Rojo"
+          [ngClass]="{'invalid-input': vehicleForm.get('color')?.invalid && vehicleForm.get('color')?.touched}">
+        </ion-input>
       </ion-item>
+      <ion-text color="danger" *ngIf="vehicleForm.get('color')?.invalid && vehicleForm.get('color')?.touched">
+        El color es obligatorio y debe tener al menos 2 caracteres.
+      </ion-text>
 
+      <!-- Tipo de Combustible -->
       <ion-item>
-        <ion-label position="stacked">Tipo de Combustible</ion-label>
-        <ion-select formControlName="tipo_combustible" placeholder="Selecciona">
+        <ion-label position="stacked" aria-required="true">Tipo de Combustible</ion-label>
+        <ion-select 
+          formControlName="tipo_combustible" 
+          placeholder="Selecciona"
+          [ngClass]="{'invalid-input': vehicleForm.get('tipo_combustible')?.invalid && vehicleForm.get('tipo_combustible')?.touched}">
           <ion-select-option value="Gasolina">Gasolina</ion-select-option>
           <ion-select-option value="Diesel">Diesel</ion-select-option>
           <ion-select-option value="Eléctrico">Eléctrico</ion-select-option>
         </ion-select>
       </ion-item>
+      <ion-text color="danger" *ngIf="vehicleForm.get('tipo_combustible')?.invalid && vehicleForm.get('tipo_combustible')?.touched">
+        El tipo de combustible es obligatorio.
+      </ion-text>
 
+      <!-- Foto del Vehículo -->
       <ion-item>
         <ion-label position="stacked">Foto del Vehículo</ion-label>
-        <input type="file" (change)="onImageSelected($event)" accept="image/*">
+        <input 
+          type="file" 
+          (change)="onImageSelected($event)" 
+          accept="image/*" 
+          aria-required="true">
       </ion-item>
-      <div *ngIf="!imageFile && imageTouched" class="error-message">
-        <ion-text color="danger">La imagen es obligatoria.</ion-text>
-      </div>
+      <ion-text color="danger" *ngIf="imageTouched && !imageFile">
+        La imagen es obligatoria.
+      </ion-text>
     </ion-list>
 
+    <!-- Botón Guardar -->
     <div class="button-container">
-      <ion-button type="submit" expand="block" [disabled]="!vehicleForm.valid">Guardar Vehículo</ion-button>
+      <ion-button 
+        type="submit" 
+        expand="block" 
+        [disabled]="!vehicleForm.valid || !imageFile">
+        Guardar Vehículo
+      </ion-button>
     </div>
   </form>
 </ion-content>

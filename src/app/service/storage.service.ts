@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
-
   constructor() { }
 
   set(key: string, value: any): void {
@@ -20,33 +19,54 @@ export class StorageService {
     localStorage.removeItem(key);
   }
 
-  // esta cosa solo elimina los temporales
+  // Esta cosa solo elimina los temporales
   clearSessionData(): void {
     this.remove('email');
     this.remove('tokenID');
   }
 
-  // asocia el nombre al token (set y get)
-  setUserName(tokenID: string, name: string): void {
-    this.set(`name_${tokenID}`, name);
-  }
-  getUserName(tokenID: string): string | null {
-    return tokenID ? this.get(`name_${tokenID}`) : null;
+  // Nuevo método para obtener datos de sesión
+  obtenerStorage(): any {
+    const email = localStorage.getItem('email');
+    const tokenID = localStorage.getItem('tokenID');
+    
+    if (email && tokenID) {
+      return {
+        email: email,
+        token: tokenID
+      };
+    }
+    return null;
+  }  
+
+  // Método de almacenamiento genérico
+  agregarStorage(key: string, data: any): void {
+    try {
+      this.set(key, data);
+      console.log('Datos guardados en storage:', data);
+    } catch (error) {
+      console.error('Error al guardar en storage:', error);
+      throw error;
+    }
+  }  
+
+  // Método para limpiar todo el storage
+  limpiarStorage(): void {
+    try {
+      localStorage.clear();
+      console.log('Storage limpiado completamente');
+    } catch (error) {
+      console.error('Error al limpiar storage:', error);
+    }
   }
 
-  // asocia tarjetas al  token (set y get)
-  setUserCards(tokenID: string, cards: any[]): void {
-    if (tokenID) this.set(`cards_${tokenID}`, cards);
-  }
-  getUserCards(tokenID: string): any[] {
-    return tokenID ? this.get(`cards_${tokenID}`) || [] : [];
-  }
-
-  // asocia tarjeta seleccionada al token (set y get)
-  setUserSelectedCard(tokenID: string, selectedCard: any): void {
-    if (tokenID) this.set(`selectedCard_${tokenID}`, selectedCard);
-  }
-  getUserSelectedCard(tokenID: string): any | null {
-    return tokenID ? this.get(`selectedCard_${tokenID}`) : null;
+  // Método para eliminar storage
+  eliminarStorage(): void {
+    try {
+      localStorage.clear();
+      console.log('Storage limpiado completamente');
+    } catch (error) {
+      console.error('Error al eliminar el storage:', error);
+    }
   }
 }

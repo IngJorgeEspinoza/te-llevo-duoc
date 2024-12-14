@@ -8,9 +8,7 @@
     </ion-header>
     <ion-content class="ion-padding">
       <div class="user-profile">
-        <ion-avatar>
-          <img [src]="userPhoto" alt="User Photo">
-        </ion-avatar>
+
         <h2>{{ userName }}</h2>
         <p>{{ userEmail }}</p>
       </div>
@@ -18,7 +16,7 @@
       <ion-list>
         <ion-item (click)="editProfile()">
           <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-          <ion-label>Editar Perfil</ion-label>
+          <ion-label>Editar Nombre</ion-label>
         </ion-item>
 
         <ion-item routerLink="/vehicle">
@@ -29,10 +27,6 @@
         <ion-item routerLink="/history">
           <ion-icon slot="start" name="list-outline"></ion-icon>
           <ion-label>Historial de Viajes</ion-label>
-        </ion-item>
-        <ion-item routerLink="/payments">
-          <ion-icon slot="start" name="card-outline"></ion-icon>
-          <ion-label>Pagos</ion-label>
         </ion-item>
         <ion-item (click)="confirmLogout()">
           <ion-icon slot="start" name="log-out-outline"></ion-icon>

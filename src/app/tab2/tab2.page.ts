@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from 'src/app/service/api.service';
+import { ApiService, BodyTrip } from '../service/api.service';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { StorageService } from '../service/storage.service';
 
 @Component({
   selector: 'app-tab2',
-  templateUrl: './tab2.page.html',
-  styleUrls: ['./tab2.page.scss'],
+  templateUrl: 'tab2.page.html',
+  styleUrls: ['tab2.page.scss'],
 })
 export class Tab2Page implements OnInit {
-  tripForm!: FormGroup;
+  tripForm: FormGroup;
+  vehiculoId: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private apiService: ApiService,
     private loadingController: LoadingController,
-    private alertController: AlertController
-  ) {}
-
-  ngOnInit() {
-    // Inicialización del formulario reactivo
+    private alertController: AlertController,
+    private storage: StorageService
+  ) {
     this.tripForm = this.formBuilder.group({
       origen: ['', Validators.required],
       destino: ['', Validators.required],
@@ -30,6 +30,25 @@ export class Tab2Page implements OnInit {
     });
   }
 
+  async ngOnInit() {
+    try {
+      const userId = await this.apiService.getUserId();
+      const vehiculos = await this.apiService.obtenerVehiculos(userId);
+
+      if (vehiculos.length > 0) {
+        this.vehiculoId = vehiculos[0]?.id;
+      } else {
+        console.warn('No se encontraron vehículos registrados.');
+      }
+    } catch (error) {
+      console.error('Error al cargar vehículo:', error);
+      await this.presentAlert(
+        'Error',
+        'Hubo un problema al cargar tus vehículos. Asegúrate de tener un vehículo registrado.'
+      );
+    }
+  }
+
   async publishTrip() {
     if (this.tripForm.valid) {
       const loading = await this.loadingController.create({
@@ -38,25 +57,32 @@ export class Tab2Page implements OnInit {
       await loading.present();
 
       try {
-        const tripData = {
-          origen: this.tripForm.value.origen,
-          destino: this.tripForm.value.destino,
-          fechaHoraSalida: this.tripForm.value.fechaHoraSalida,
-          asientosDisponibles: this.tripForm.value.asientosDisponibles,
-          precioAsiento: this.tripForm.value.precioAsiento,
-          descripcion: this.tripForm.value.descripcion,
+        const userId = await this.apiService.getUserId();
+        if (!this.vehiculoId) {
+          throw new Error('No hay vehículo registrado. Registra un vehículo primero.');
+        }
+
+        const formValues = this.tripForm.value;
+        const tripData: BodyTrip = {
+          p_id_usuario: userId,
+          p_ubicacion_origen: formValues.origen,
+          p_ubicacion_destino: formValues.destino,
+          p_costo: formValues.precioAsiento,
+          p_id_vehiculo: this.vehiculoId,
         };
 
         await this.apiService.publicarViaje(tripData);
         await loading.dismiss();
-        this.presentAlert('Éxito', 'El viaje ha sido publicado correctamente.');
+
+        await this.presentAlert('Éxito', 'El viaje ha sido publicado correctamente.');
         this.tripForm.reset();
-      } catch (error) {
+      } catch (error: any) {
         await loading.dismiss();
-        this.presentAlert('Error', 'No se pudo publicar el viaje. Por favor, inténtalo nuevamente.');
+        console.error('Error al publicar viaje:', error);
+        await this.presentAlert('Error', error.message || 'No se pudo publicar el viaje.');
       }
     } else {
-      this.presentAlert('Formulario incompleto', 'Por favor, completa todos los campos obligatorios.');
+      await this.presentAlert('Formulario incompleto', 'Completa todos los campos obligatorios.');
     }
   }
 

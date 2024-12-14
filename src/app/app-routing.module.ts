@@ -42,12 +42,6 @@ const routes: Routes = [
     data: { authGuardPipe: redirectLogin }
   },
   {
-    path: 'payments',
-    loadChildren: () => import('./pages/payments/payments.module').then(m => m.PaymentsPageModule),
-    canActivate: [AngularFireAuthGuard],
-    data: { authGuardPipe: redirectLogin }
-  },
-  {
     path: 'vehicle',
     loadChildren: () => import('./pages/vehicle/vehicle.module').then( m => m.VehiclePageModule),
     canActivate: [AngularFireAuthGuard],

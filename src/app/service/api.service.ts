@@ -1,115 +1,158 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { FirebaseService } from './firebase.service';
+import { lastValueFrom } from 'rxjs';
+import { StorageService } from './storage.service';
+
+export interface BodyUser {
+  p_nombre: string;
+  p_correo_electronico: string;
+  p_telefono: string;
+  token: string;
+}
+
+export interface BodyTrip {
+  p_id_usuario: string;
+  p_ubicacion_origen: string;
+  p_ubicacion_destino: string;
+  p_costo: number;
+  p_id_vehiculo: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  constructor(private http: HttpClient, private firebaseService: FirebaseService) {}
+  private baseUrl = `${environment.apiUrl}/api`.replace(/\/$/, '');
 
-  // Método para agregar un usuario
-  async agregarUsuario(data: BodyUser, imageFile: File): Promise<any> {
-    const formData = new FormData();
-    formData.append('p_nombre', data.p_nombre);
-    formData.append('p_correo_electronico', data.p_correo_electronico);
-    formData.append('p_fecha_nacimiento', data.p_fecha_nacimiento);
-    formData.append('p_telefono', data.p_telefono);
-    if (data.token) {
-      formData.append('token', data.token);
-    }
-    formData.append('image_usuario', imageFile, imageFile.name);
+  constructor(private http: HttpClient, private storage: StorageService) {}
 
-    return await lastValueFrom(
-      this.http.post<any>(`${environment.apiUrl}/user/agregar`, formData)
-    );
-  }
+  async obtenerUsuario(email: string): Promise<any> {
+    const params = {
+      p_correo: email,
+      token: this.storage.get('tokenID'),
+    };
 
-  // Método para agregar un vehículo
-  async agregarVehiculo(data: BodyVehicle, imageFile: File): Promise<any> {
-    const formData = new FormData();
-    formData.append('p_id_usuario', data.p_id_usuario.toString());
-    formData.append('p_patente', data.p_patente);
-    formData.append('p_marca', data.p_marca);
-    formData.append('p_modelo', data.p_modelo);
-    formData.append('p_anio', data.p_anio.toString());
-    formData.append('p_color', data.p_color);
-    formData.append('p_tipo_combustible', data.p_tipo_combustible);
-    formData.append('token', data.token);
-    formData.append('image', imageFile, imageFile.name);
-
-    return await lastValueFrom(
-      this.http.post<any>(`${environment.apiUrl}/vehiculo/agregar`, formData)
-    );
-  }
-
-  // Método para obtener el ID del usuario
-  async getUserId(): Promise<string> {
     try {
-      const token = await this.firebaseService.getTokenID();
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-      });
-
       const response = await lastValueFrom(
-        this.http.get<any>(`${environment.apiUrl}/user/obtener-id`, { headers })
+        this.http.get(`${this.baseUrl}/user/obtener`, { params })
       );
-
-      if (!response.id) {
-        throw new Error('ID de usuario no encontrado en la respuesta.');
-      }
-
-      return response.id;
+      return response;
     } catch (error) {
-      console.error('Error al obtener el ID del usuario:', error);
-      throw new Error(
-        'No se pudo obtener el ID del usuario. Verifica tu conexión o la configuración del servidor.'
-      );
+      console.error('Error al obtener usuario:', error);
+      throw new Error('No se pudo obtener la información del usuario.');
     }
   }
 
-  // Método para publicar un viaje
-  async publicarViaje(data: BodyTrip): Promise<any> {
-    const token = await this.firebaseService.getTokenID();
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+  async agregarUsuario(userData: BodyUser, imageFile: File): Promise<any> {
+    const formData = new FormData();
+    Object.keys(userData).forEach(key => {
+      formData.append(key, userData[key as keyof BodyUser] as string);
     });
+    formData.append('image_usuario', imageFile);
 
-    return await lastValueFrom(
-      this.http.post<any>(`${environment.apiUrl}/viaje/publicar`, data, { headers })
-    );
+    try {
+      return await lastValueFrom(
+        this.http.post(`${this.baseUrl}/user/agregar`, formData)
+      );
+    } catch (error) {
+      console.error('Error al agregar usuario:', error);
+      throw error;
+    }
   }
-}
 
-// Interfaz para el cuerpo de la solicitud al agregar un usuario
-export interface BodyUser {
-  p_nombre: string;
-  p_correo_electronico: string;
-  p_fecha_nacimiento: string;
-  p_telefono: string;
-  token?: string;
-}
+  async agregarVehiculo(vehicleData: any, imageFile: File): Promise<any> {
+    const formData = new FormData();
+    Object.keys(vehicleData).forEach(key => {
+      formData.append(key, vehicleData[key].toString());
+    });
+    formData.append('image', imageFile);
 
-// Interfaz para el cuerpo de la solicitud al agregar un vehículo
-export interface BodyVehicle {
-  p_id_usuario: string;
-  p_patente: string;
-  p_marca: string;
-  p_modelo: string;
-  p_anio: number;
-  p_color: string;
-  p_tipo_combustible: string;
-  token: string;
-}
+    try {
+      return await lastValueFrom(
+        this.http.post(`${this.baseUrl}/vehiculo/agregar`, formData)
+      );
+    } catch (error) {
+      console.error('Error al agregar vehículo:', error);
+      throw new Error('No se pudo agregar el vehículo.');
+    }
+  }
 
-// Interfaz para el cuerpo de la solicitud al publicar un viaje
-export interface BodyTrip {
-  origen: string;
-  destino: string;
-  fechaHoraSalida: string;
-  asientosDisponibles: number;
-  precioAsiento: number;
-  descripcion?: string;
+  async obtenerVehiculos(userId: string): Promise<any[]> {
+    const params = {
+      p_id: userId,
+      token: this.storage.get('tokenID'),
+    };
+
+    try {
+      const response = await lastValueFrom(
+        this.http.get<any[]>(`${this.baseUrl}/vehiculo/obtener`, { params })
+      );
+      return response || [];
+    } catch (error) {
+      console.error('Error al obtener vehículos:', error);
+      throw new Error('No se pudo cargar la lista de vehículos.');
+    }
+  }
+
+  async publicarViaje(tripData: BodyTrip): Promise<any> {
+    const token = this.storage.get('tokenID');
+    const payload = { ...tripData, token };
+
+    try {
+      return await lastValueFrom(
+        this.http.post(`${this.baseUrl}/viaje/agregar`, payload)
+      );
+    } catch (error) {
+      console.error('Error al publicar viaje:', error);
+      throw new Error('No se pudo publicar el viaje.');
+    }
+  }
+
+  async obtenerViajes(): Promise<any[]> {
+    const token = this.storage.get('tokenID');
+    const params = { token };
+
+    try {
+      const response = await lastValueFrom(
+        this.http.get<any[]>(`${this.baseUrl}/viaje/obtener`, { params })
+      );
+      return response || [];
+    } catch (error) {
+      console.error('Error al obtener viajes:', error);
+      throw new Error('No se pudo cargar la lista de viajes.');
+    }
+  }
+
+  async actualizarEstadoViaje(viajeId: string, estadoId: number): Promise<any> {
+    const payload = {
+      p_id: viajeId,
+      p_id_estado: estadoId,
+      token: this.storage.get('tokenID'),
+    };
+
+    try {
+      return await lastValueFrom(
+        this.http.post(`${this.baseUrl}/viaje/actualiza_estado_viaje`, payload)
+      );
+    } catch (error) {
+      console.error('Error al actualizar estado del viaje:', error);
+      throw new Error('No se pudo actualizar el estado del viaje.');
+    }
+  }
+
+  async getUserId(): Promise<string> {
+    const email = this.storage.get('email');
+    if (!email) {
+      throw new Error('No hay usuario logueado.');
+    }
+
+    try {
+      const userResponse = await this.obtenerUsuario(email);
+      return userResponse.id;
+    } catch (error) {
+      console.error('Error al obtener ID del usuario:', error);
+      throw new Error('No se pudo obtener el ID del usuario.');
+    }
+  }
 }
